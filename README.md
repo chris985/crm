@@ -48,7 +48,7 @@ Current system requirements are:
 3.  Create an empty database
 4.  Rename `/.env.example` to `/.env` and configure the application variables to connect to the database per: https://laravel.com/docs/5.4/configuration
 5.  Run the Artisan database migrator to create the database schema. You can do this by running `php artisan migrate` from a command line in the root application folder `/`. Or, to create the schema and also add dummy records find `/database/seeds/DatabaseSeeder.php.example` and rename it to `DatabaseSeeder.php` and run `php artisan migrate --seed`
-6.  Manually create 2 folders: `/public/media/people` and `/public/media/places`. Otherwise you will be unable to save images.
+6.  ~Manually create 2 folders: `/public/media/people` and `/public/media/places`. Otherwise you will be unable to save images.~ No longer have to do this! I figured out Git
 7.  Check to be sure that all files have completed copying and the database structure has been created sucessfully. That's it! Enjoy!
 
 ## 1.4  UPDATING
