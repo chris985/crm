@@ -162,6 +162,8 @@ The roadmap is a look at things to come. As the app develops, these are the feat
 Built with the following assets:
 - __Laravel__: https://laravel.com
 - __Laravel Collective Forms__: https://laravelcollective.com
+- __Image Intervention__: http://image.intervention.io/
+- __Faker__: https://github.com/fzaninotto/Faker
 - __Bootstrap 4__: https://v4-alpha.getbootstrap.com/
 - __Select2__: https://select2.github.io/
 - __Google Material Design__: https://material.io/
