@@ -4,25 +4,23 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>    
-        @hasSection('title')
-        @yield('title') | Starstation
-        @else
-        Starstation
-        @endif
+    {{-- Check for page title variable, if undefined, show application name --}}
+    <title>@hasSection('title')@yield('title') | Starstation @else Starstation @endif
     </title>
-    <link rel="icon" type="image/x-icon" href="/symfony/web/favicon.ico" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" />
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/symfony/web/favicon.ico" /> <!-- App Icon -->
+    {{-- Dependent CSS --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"> <!-- Bootstrap CSS Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /> <!-- Font Awesome CSS --> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" /> <!-- Select 2 CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet"> <!-- Material Font Import -->
 
+    {{-- Temporary embedded styles --}}
     <style type="text/css">
-        /* Embedded Styles TEMP */
         body {
             font-family: 'Noto Sans', "Roboto", "Helvetica", "Arial", sans-serif; sans-serif;
         }
-        .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--multiple {
+        /* Make Select2 boxes match Bootstrap boxes */
+        .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--multiple { 
             border: 1px solid rgba(0,0,0,.15);
         }
         .select2-container--default.select2-container--focus .select2-selection--single, .select2-container--default.select2-container--focus .select2-selection--multiple, .select2-container--default.select2-container--focus .select2-selection--single:hover, .select2-container--default.select2-container--focus .select2-selection--multiple:hover {
@@ -36,6 +34,26 @@
         .select2-container .select2-selection--single {
             height: 38px;
         }
+        /* Bootstrap overrides, reset colors on some elements */
+        nav#nav a, #sub a {
+            color: rgba(255,255,255,.5)
+        }
+        nav#nav p, #sub nav p, nav#nav .nav-item.active a, #sub nav .nav-item.active a, nav#nav .navbar-brand a, #sub nav h1 {
+            color: #FFF;
+        }
+        .nav-text {
+            color: inherit;
+        }
+        .nav-text:hover {
+            text-decoration: none;
+        }
+        .btn-link {
+            color: rgba(255,255,255,.5)
+        }
+        a, button {
+            color: inherit;
+        }
+        /* Add some basic Material styling */
         .material-blue, nav#nav, #sub {
             background-color: #0091ea; 
         }
@@ -47,9 +65,14 @@
             background: #FFF;
             box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0.2), 0px 7px 10px 1px rgba(0, 0, 0, 0.14), 0px 2px 16px 1px rgba(0, 0, 0, 0.12);
         }
-        a, button {
-            color: inherit;
+        #nav {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            border-bottom: 1px solid #009af9;
         }
+        .card {
+            border: none;
+        }
+        /* Compressed Card-List Component, for paginated lists of cards */
         .card-list .card {
             background: none;
             border-top: none;
@@ -63,52 +86,18 @@
             border-bottom: 1px solid #FFFFFF;
             border-radius: 0.125rem;
         }
+        /* A heavily-shadowed Card-Open focused card */
         .card-open {
             box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
         }
+        /* Mainly for login pages, a centered card about half the width of the screen*/
         .card-centered {
             width: 25em;
             margin-left: auto;
             margin-right: auto;
         }
-        #nav {
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-            border-bottom: 1px solid #009af9;
-        }
-        nav#nav a, #sub a {
-            color: rgba(255,255,255,.5)
-        }
-        nav#nav p, #sub nav p, nav#nav .nav-item.active a, #sub nav .nav-item.active a, nav#nav .navbar-brand a, #sub nav h1 {
-            color: #FFF;
-        }
-        .nav-text {
-            color: inherit;
-        }
-        .nav-text:hover {
-            text-decoration: none;
-        }
-        .btn-rounded {
-            width: 2.5rem;
-            min-width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 50%;
-            padding-left: 0;
-            padding-right: 0;
-            border: none;
-        }
-        .btn-rounded.btn-primary {
-            background: #FFF;
-        }
-        #sub .btn-rounded.btn-primary {
-            color: #0091ea; 
-        }
-        .card {
-            border: none;
-        }
-        .btn-link {
-            color: rgba(255,255,255,.5)
-        }
     </style>
+    {{-- Injection point for temporary page-specific CSS --}}
     @hasSection('css')
     <style type="text/css">
         @yield('css')
@@ -122,7 +111,8 @@
         </button>
         <div class="navbar-brand mr-auto"><a href="{{ route('index') }}"><i class="fa fa-bars fa-fw mr-1"></i>Station</a></div>
         <div class="collapse navbar-collapse" id="topnav">
-            @if (Auth::check())
+            {{-- Check if logged in --}}
+            @if (Auth::check()) 
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><a class="nav-link disabled" href="{{ route('tasks.index') }}"><i class="fa fa-leaf fa-fw"></i>&nbsp;Tasks</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('people.index') }}"><i class="fa fa-group fa-fw"></i>&nbsp;People</a></li>
@@ -130,7 +120,7 @@
                 <li class="nav-item"><a class="nav-link disabled" href="#"><i class="fa fa-money fa-fw"></i>&nbsp;Money</a></li>
                 <li class="nav-item"><a class="nav-link disabled" href="#"><i class="fa fa-clock-o fa-fw"></i>&nbsp;Times</a></li>
                 <li class="nav-item mr-3"><a class="nav-link disabled" href="#"><i class="fa fa-puzzle-piece fa-fw"></i>&nbsp;Things</a></li>
-                <li class="nav-item dropdown hidden-xs-up">
+                <li class="nav-item dropdown hidden-xs-up"> {{-- Future notification system --}}
                     <a class="dropdown-toggle nav-link" href="#" id="UserNotification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bell-o fa-lg fa-fw"></i>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="UserNotification">
@@ -159,55 +149,65 @@
                     </form>
                 </li>
             </ul>
-            @else
+            @else {{-- If not logged in, show login and registration menu items --}}
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><a class="nav-link" href="{{ route('login') }}"><i class="fa fa-key fa-fw"></i>&nbsp;Login</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('register') }}"><i class="fa fa-user-plus fa-fw"></i>&nbsp;Register</a></li>
                 @endif
-            </div>
+            </ul>
+        </div>
+    </nav>
+    {{-- Open form early so variables are available to us and the navigation can function properly --}}
+    @yield('form-open')
+    <div id="sub" style="padding-bottom: 50px;">
+        <nav class="navbar navbar-inverse py-3 px-3">
+            <ul class="nav row align-items-center px-3">
+                {{-- For ease of testing, the "back" button just takes one history step back. Eventually each page will have a seperate "back" step. Backing out of "Edit Person" will bring you to "Show Person" where as Backing out of "Show Person" will bring you to "Index People" --}}
+                @yield('back', '<li class="nav-item"><a href="javascript:history.go(-1)"><i class="fa fa-arrow-left fa-fw mr-1"></i></a></li>')
+                <li class="nav-item hidden-sm-down">
+                    {{-- The Page title is reused and spit out in the sub navigation --}}
+                    <a class="nav-link" href="#"><h1 class="">@yield('title')</h1></a>
+                </li>
+                {{-- If the user can take any actions on the page, spit out list items as linked icons. Ex: New, Edit, Delete --}}
+                @yield('actions')
+            </ul>
         </nav>
-        @yield('form-open')
-        <div id="sub" style="padding-bottom: 50px;">
-            <nav class="navbar navbar-inverse py-3 px-3">
-                <ul class="nav row align-items-center px-3">
-                    @yield('back', '<li class="nav-item"><a href="javascript:history.go(-1)"><i class="fa fa-arrow-left fa-fw mr-1"></i></a></li>')
-                    <li class="nav-item hidden-sm-down">
-                        <a class="nav-link" href="#"><h1 class="">@yield('title')</h1></a>
-                    </li>
-                    @yield('actions')
-                </ul>
-            </nav>
-        </div>
-        <main class="@yield('page')" style="margin-top: -50px;">
-            @yield('content')
-        </main>
-        @yield('form-close') 
-        <footer id="footer" class="py-3 px-3">
-            <p class="py-3 px-3" style="text-align: center;">&copy; 2017 Starcresc Interactive</p>
-        </footer>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-        <script type="text/javascript">
-            $('select').select2();
-            $( document ).ready(function() {
-                $(".dropdown-button").dropdown();
-            });
-        </script>
-        @hasSection('modal')
-        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    @yield('modal')
-                </div>
+    </div>
+    {{-- Use page variable to specify page-specific css classes. This will eventually be cleaned up to the page title or just targeted CSS --}}
+    <main class="@yield('page')" style="margin-top: -50px;">
+        {{-- If logged in, show main navigation --}}
+        @yield('content')
+    </main>
+    {{-- Close a form if it is open --}}
+    @yield('form-close') 
+    <footer id="footer" class="py-3 px-3">
+        {{-- Footer copyright --}}
+        <p class="py-3 px-3" style="text-align: center;">&copy; 2017 Starcresc Interactive</p>
+    </footer>
+    {{-- Dependent scripts --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> <!-- JQuery JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script> <!-- Tether -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script> <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script> <!-- Select2 JS -->
+    <script type="text/javascript">
+        $('select').select2();
+        $( document ).ready(function() {
+            $(".dropdown-button").dropdown();
+        });
+    </script> <!-- Initialize Boostrap Components and Select2 -->
+    {{-- If there is a modal dialog, such as a delete confirmation, load it in here --}}
+    @hasSection('modal')
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                @yield('modal')
             </div>
         </div>
-        @endif
-        @hasSection('js')
-
-        @yield('js')
-
-        @endif
-    </body>
-    </html>
+    </div>
+    @endif
+    {{-- You can all this section for any temporary page-specific JS --}}
+    @hasSection('js')
+    @yield('js')
+    @endif
+</body>
+</html>
