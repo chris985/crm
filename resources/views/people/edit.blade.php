@@ -19,12 +19,12 @@
 			<div class="col main">
 				<div class="form-group row">
 					<div class="col-md-6">
-						<label class="text-muted" for="first"><i class="text-muted fa fa-user-circle fa-fw mr-1"></i>First</label>
+						<label class="text-muted" for="first"><i class="text-muted fa fa-user fa-fw mr-1"></i>First</label>
 						<input id="first" class="form-control" name="first" type="text" value="{{ $person->first }}" aria-describedby="first">
 					</div>
 					<div class="col-md-6">
-						<label class="text-muted" for="last"><i class="text-muted fa fa-diamond fa-fw mr-1"></i>Last Name</label>
-						<input id="last" class="form-control" name="last" type="text" value="{{ $person->last }}" aria-describedby="last" >
+						<label class="text-muted" for="last"><i class="text-muted fa fa-diamond fa-fw mr-1"></i>Last</label>
+						<input id="last" class="form-control" name="last" type="text" value="{{ $person->last }}" aria-describedby="last">
 					</div>
 				</div>
 				<div class="form-group row">
@@ -41,23 +41,11 @@
 			<div class="col-md-2">
 				<div class="form-group">
 					<label class="text-muted" for="status"><i class="text-muted fa fa-eye fa-fw mr-1"></i>Status</label>
-					<select id="status" class="form-control" name="status">
-						<option value="0">Inactive</option>
-						<option value="1" selected>Active</option>
-					</select>
+ 					{{ Form::select('status', $person->person_status, $person->status, ['class' => 'form-control']) }}
 				</div>
 				<div class="form-group">
-					<label for="status"><i class="text-muted fa fa-sitemap fa-fw mr-1"></i>Type</label>
-					<select id="type" class="form-control" name="type">
-						<option value="0">Not-A-Fit</option>
-						<option value="1" selected>Unspecified</option>
-						<option value="2">Contact</option>
-						<option value="3">Prospect</option>
-						<option value="4">Partner</option>
-						<option value="5">Vendor</option>
-						<option value="6">Reseller</option>
-						<option value="7">Competitor</option>
-					</select>
+					<label for="type"><i class="text-muted fa fa-cubes fa-fw mr-1"></i>Type</label>
+ 					{{ Form::select('type', $person->person_type, $person->type, ['class' => 'form-control']) }}
 				</div>
 			</div>
 		</div>
@@ -87,11 +75,35 @@
 		</div>
 		<div class="form-group row">
 			<div class="col">
-				<p><i class="text-muted fa fa-photo fa-fw mr-1"></i>Photo</p>
+				<label class="text-muted" for="note"><i class="text-muted fa fa-sticky-note fa-fw mr-1"></i>Notes</label>
+				<textarea id="note" class="form-control" name="note" rows="3" aria-describedby="note">{{ $person->note }}</textarea>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-md-3">
+				<label class="text-muted" for="category"><i class="text-muted fa fa-sitemap fa-fw mr-1"></i>Category</label>
+				<input id="category" class="form-control" name="category" type="text" value="{{ $person->category }}" aria-describedby="category">
+			</div>
+			<div class="col-md-2">
+				<label class="text-muted" for="prefix"><i class="text-muted fa fa-venus-mars fa-fw mr-1"></i>Prefix</label>
+				<input id="prefix" class="form-control" name="prefix" type="text" value="{{ $person->prefix }}" aria-describedby="prefix">
+			</div>
+			<div class="col-md-3">
+				<label class="text-muted" for="email"><i class="text-muted fa fa-handshake-o fa-fw mr-1"></i>Refer</label>
+				<input id="refer" class="form-control" name="refer" type="text" value="{{ $person->refer }}" aria-describedby="refer">
+			</div>
+			<div class="col-md-4">
+				<label class="text-muted" for="account"><i class="text-muted fa fa-credit-card fa-fw mr-1"></i>Account</label>
+				<input id="account" class="form-control" name="account" type="text" value="{{ $person->account }}" aria-describedby="acocunt">
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-md-4">
+				<label><i class="text-muted fa fa-photo fa-fw mr-1"></i>Photo</label><br />
 				@if (empty($person->image))
 				<img class="float-left rounded-circle mr-3" width="40" height="40" src="https://randomuser.me/api/portraits/men/{{ $person->id }}.jpg" alt="" />
 				@else
-				<img class="float-left rounded-circle mr-3" width="40" height="40" src="/../../media/people/{{ $person->image }}" alt="" />
+				<img class="float-left rounded-circle mr-3" width="40" height="40" src="/../../storage/app/people/{{ $person->image }}" alt="" />
 				@endif
 				<label class="text-muted custom-file">
 					{{ Form::file('image', null, array('id' => 'image', 'class' => 'custom-file-control')) }}
@@ -99,15 +111,26 @@
 				</label>
 				<p class="my-1"><input id="delete" name="delete" type="checkbox" aria-describedby="remove"> Delete</p>
 			</div>
+			<div class="col-md-8">
+				<label class="text-muted" for="email"><i class="text-muted fa fa-tags fa-fw mr-1"></i>Tags</label>
+					<select id="type" class="form-control" name="type" multiple="multiple">
+						
+					</select>
+			</div>
 		</div>
 	</div>
 	<div class="card-footer text-muted">
-		<div class="form-group row">
-			<div class="col">
-				<label class="text-muted" for="note"><i class="text-muted fa fa-sticky-note fa-fw mr-1"></i>Notes</label>
-				<textarea id="note" class="form-control" name="note" rows="3" aria-describedby="note">{{ $person->note }}</textarea>
-			</div>
-		</div>
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <small><i class="fa fa-id-card fa-fw mr-1 text-muted"></i>ID#: {{ $person->id }}</small>
+            </div>
+            <div class="col-md-4">
+                <small><i class="fa fa-plus-square fa-fw text-muted"></i>Created: {{ $person->created_at }}</small>
+            </div>
+            <div class="col-md-4">
+                <small><i class="fa fa-pencil-square fa-fw text-muted"></i>Updated: {{ $person->updated_at }}</small>
+            </div>
+        </div>
 	</div>
 </article>
 @endsection

@@ -21,6 +21,7 @@ class ForgotPasswordController extends Controller
 
     use SendsPasswordResetEmails;
 
+    // Redirect to the proper view
     public function showLinkRequestForm()
     {
         return view('common.email');

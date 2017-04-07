@@ -21,11 +21,12 @@ class ResetPasswordController extends Controller
 
     use ResetsPasswords;
 
+    // Redirect to the proper view
     public function showResetForm(Request $request, $token = null)
     {
         return view('common.reset')->with(
             ['token' => $token, 'email' => $request->email]
-        );
+            );
     }
     /**
      * Where to redirect users after resetting their password.

@@ -18,12 +18,13 @@ class CreateTasksTable extends Migration
             $table->string('name');
             $table->tinyInteger('status');
             $table->tinyInteger('type');
-            $table->text('note')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('phone')->nullable();
+            $table->text('note')->nullable();
+            $table->integer('date')->nullable();
+            $table->integer('due')->nullable();
             $table->string('priority')->nullable();
-            $table->string('due')->nullable();
+            $table->integer('parent')->nullable();
         });
     }
 

@@ -19,8 +19,8 @@ class MoneyController extends Controller
 */
 public function index(Request $request)
 {
-    $money = Money::orderBy('name','asc')->paginate(10);
-    return view('money.index', compact('money'));
+    $money = Money::orderBy('name','asc')->paginate(10); // Collect from database, 10 at a time sorted alphabetically
+    return view('money.index', compact('money')); // Send to the view
 }
 
 /**
@@ -30,8 +30,8 @@ public function index(Request $request)
 */
 public function create()
 {
-    $money = new Money;
-    return view('money.create', compact('money'));
+    $money = new Money; // Create a new model
+    return view('money.create', compact('money')); // Send it to the view
 }
 
 /**
@@ -48,7 +48,7 @@ public function store(Request $request)
         'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ));
 
-    $money  = new Money;
+    $money  = new Money; // New Model 
     $money->name = $request->name;
     $money->status = $request->status;
     $money->type = $request->type;
@@ -66,12 +66,12 @@ public function store(Request $request)
     $money->country = $request->country;
     $money->note = $request->note;
 
-    if($request->hasFile('image')){
-        $image = $request->file('image');
-        $filename = time() . '.' . $image->getClientOriginalExtension();
-        Image::make($image)->resize(160, 160)->save( public_path() . '\\media\\money\\'. $filename );
-        $money->image = $filename;
-        $money->save();
+    if($request->hasFile('image')){ // If there is an image
+        $image = $request->file('image'); // Get the imaeg
+        $filename = time() . '.' . $image->getClientOriginalExtension(); // Randomize the image filename
+        Image::make($image)->resize(160, 160)->save( public_path() . '\\media\\money\\'. $filename ); // Save it to the folder
+        $money->image = $filename; // Save to database
+        $money->save(); // Save the image
     };
 
     $people = $request->people;

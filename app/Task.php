@@ -6,18 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    public $fillable = ['name','status','type','note','image','email','phone','alt','web','address','address2','city','state','zip','country','person_id','place_id','parent','division','people','places'];
+    // Fillable fields
+    public $fillable = ['name','status','type','category','note','date','due','priority','parent','people','places'];
 
+    // Each task can belong to one person
     public function people()
     {
         return $this->belongsToMany('App\Person');
     }
 
+    // Each task can belong to one place
     public function places()
     {
         return $this->belongsToMany('App\Place');
     }
 
+    // Switch status
     public function getStatusAttribute($value) {
         $status = $this->attributes['status'];
         switch($status){
@@ -30,6 +34,7 @@ class Task extends Model
         }
     }
 
+    // Switch type
     public function getTypeAttribute($value) {
         $type = $this->attributes['type'];
         switch($type){
@@ -53,18 +58,6 @@ class Task extends Model
             break;
             case 6:
             return 'Competitor';
-            break;
-        }
-    }
-
-    public function getCountryAttribute($value) {
-        $country = $this->attributes['country'];
-        switch($country){
-            case 124:
-            return 'Canada';
-            break;
-            case 840:
-            return 'United States';
             break;
         }
     }

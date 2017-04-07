@@ -22,6 +22,7 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
+    // Redirect to the proper view
     public function showRegistrationForm()
     {
         return view('common.register');

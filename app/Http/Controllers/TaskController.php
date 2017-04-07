@@ -21,8 +21,8 @@ class TaskController extends Controller
 */
 public function index(Request $request)
 {
-    $tasks = Task::orderBy('created_at','desc')->paginate(10);
-    return view('tasks.index', compact('tasks'));
+    $tasks = Task::orderBy('created_at','desc')->paginate(10); // Grab all tasks, paginate by 10
+    return view('tasks.index', compact('tasks')); // Return the view
 }
 
 /**
@@ -32,10 +32,10 @@ public function index(Request $request)
 */
 public function create()
 {
-    $task = new Task;
-    $people = Person::pluck('name', 'id');
-    $places = Place::pluck('name', 'id');
-    return view('tasks.create', compact('task','people','places'));
+    $task = new Task; // New model instance
+    $people = Person::pluck('name', 'id'); // Get people
+    $places = Place::pluck('name', 'id'); // Get places
+    return view('tasks.create', compact('task','people','places')); // Return the view
 }
 
 /**
@@ -47,22 +47,21 @@ public function create()
 
 public function store(Request $request)
 {
-    $this->validate($request, array(
+    $this->validate($request, array( // Validation
         'name' => 'required',
         'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ));
-
-    $task = new Task;
+    $task = new Task; // New model instance
     $task->name = $request->name;
     $task->status = $request->status;
     $task->type = $request->type;
     $task->note = $request->note;
-    $task->save();
-    $person = $request->people;
-    $task->people()->attach($person);
-    $place = $request->places;
-    $task->places()->attach($place);
-    return redirect()->route('tasks.index')
+    $task->save(); // Save the task
+    $person = $request->people; // Get associated People
+    $task->people()->attach($person); // Save associated People
+    $place = $request->places; // Get associated Places
+    $task->places()->attach($place); // Save associated places
+    return redirect()->route('tasks.index') // Return the view
     ->with('success','Item created successfully');
 }
 
@@ -74,8 +73,8 @@ public function store(Request $request)
 */
 public function show($id)
 {
-    $task = Task::find($id);
-    return view('tasks.show', compact('task'));
+    $task = Task::find($id); // Find the task
+    return view('tasks.show', compact('task')); // Return the view
 }
 
 /**
@@ -86,8 +85,8 @@ public function show($id)
 */
 public function edit($id)
 {
-    $task = Task::find($id);
-    return view('tasks.edit', compact('task'));
+    $task = Task::find($id); // Find the task
+    return view('tasks.edit', compact('task')); // Return the view
 }
 
 /**
@@ -103,7 +102,6 @@ public function update(Request $request, $id)
         'name' => 'required',
         'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ));
-
     $place = Task::find($id);
     $place->name = $request->name;
     $place->status = $request->status;
@@ -121,9 +119,7 @@ public function update(Request $request, $id)
     $place->zip = $request->zip;
     $place->country = $request->country;
     $place->note = $request->note;
-
     $place->update();
-
     return redirect()->route('tasks.index')
     ->with('success','Task updated successfully');
 }
@@ -136,8 +132,8 @@ public function update(Request $request, $id)
 */
 public function destroy($id)
 {
-    Task::find($id)->delete();
-    return redirect()->route('tasks.index')
+    Task::find($id)->delete(); // Delete the task
+    return redirect()->route('tasks.index') // Return the view
     ->with('success','Task deleted successfully');
 }
 }

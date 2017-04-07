@@ -15,22 +15,24 @@ class CreatePeopleTable extends Migration
     {
         Schema::create('people', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->string('name');
-            $table->tinyInteger('status');
-            $table->tinyInteger('type');
-            $table->text('note')->nullable();
-            $table->text('image')->nullable();
+            $table->string('name', '150');
+            $table->unsignedSmallInteger('status');
+            $table->unsignedSmallInteger('type');
             $table->timestamps();
             $table->softDeletes();
-            $table->string('email')->nullable();
+            $table->unsignedSmallInteger('category')->nullable();
+            $table->text('note')->nullable();
+            $table->string('image')->nullable();
             $table->string('phone')->nullable();
             $table->string('alt')->nullable();
+            $table->string('email', '255')->nullable();
             $table->string('web')->nullable();
             $table->string('title')->nullable();
-            $table->string('first')->nullable();
-            $table->string('last')->nullable();
-            $table->string('gender')->nullable();
-            $table->string('department')->nullable();
+            $table->string('refer')->nullable();
+            $table->string('first', '50')->nullable();
+            $table->string('last', '50')->nullable();
+            $table->string('prefix', '10')->nullable();
+            $table->string('account')->nullable();
         });
     }
 

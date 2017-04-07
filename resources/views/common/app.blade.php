@@ -34,6 +34,9 @@
         .select2-container .select2-selection--single {
             height: 38px;
         }
+        .select2-container {
+            max-width: 100%;
+        }
         /* Bootstrap overrides, reset colors on some elements */
         nav#nav a, #sub a {
             color: rgba(255,255,255,.5)
@@ -83,7 +86,6 @@
         .card-list .card:hover {
             background: #FFF;
             box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-            border-bottom: 1px solid #FFFFFF;
             border-radius: 0.125rem;
         }
         /* A heavily-shadowed Card-Open focused card */

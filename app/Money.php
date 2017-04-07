@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Money extends Model
 {
+	// Fillable fields
 	public $fillable = ['name','status','type','note','image','email','phone','alt','web','address','address2','city','state','zip','country','people','parent','division'];
 
+	// Switch Statuses
 	public function getStatusAttribute($value) {
 		$status = $this->attributes['status'];
 		switch($status){
@@ -20,6 +22,7 @@ class Money extends Model
 		}
 	}
 
+	// Switch Types
 	public function getTypeAttribute($value) {
 		$type = $this->attributes['type'];
 		switch($type){
@@ -47,6 +50,7 @@ class Money extends Model
 		}
 	}
 
+	// Switch Countries, only caring about US, Canada at this time
 	public function getCountryAttribute($value) {
 		$country = $this->attributes['country'];
 		switch($country){

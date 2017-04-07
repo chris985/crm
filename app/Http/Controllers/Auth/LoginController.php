@@ -20,6 +20,7 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
+    // Redirect to the proper view
     public function showLoginForm()
     {
         return view('common.login');

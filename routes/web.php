@@ -14,6 +14,7 @@
 Route::get('/', function () { // Dashboard, Index, Home Route
 	return view('index'); 
 })->name('index')->middleware('auth');
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout'); // Logout
 Route::group(['middleware' => 'auth'], function() //Protected Routes
 {
 	Route::resource('people','PersonController'); //People
@@ -24,4 +25,8 @@ Route::resource('money','MoneyController'); // Money
 Route::get('globalsearch', 'SearchController@index'); //Search Page
 Route::get('globalsearch-autocomplete', 'SearchController@autocomplete'); // Search Queries
 Auth::routes(); // Auth
-Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout'); //Logout
+
+Route::get('install', 'InstallerController@index');
+Route::post('install', 'InstallerController@install');
+Route::get('update', 'InstallerController@index');
+Route::post('update', 'InstallerController@update');

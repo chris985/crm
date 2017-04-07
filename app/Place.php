@@ -6,18 +6,34 @@ use Illuminate\Database\Eloquent\Model;
 
 class Place extends Model
 {
-	public $fillable = ['name','status','type','note','image','email','phone','alt','web','address','address2','city','state','zip','country','people','person_id','parent','division'];
+	// Fillable fields
+	public $fillable = ['name','status','type','note','image','phone','alt','email','web','title','address','address2','city','state','zip','country','fax','account','parent','people','person_id'];
 
+	// Can have one parent 
+    public function parent()
+    {
+        return $this->belongsTo('App\Place', 'parent');
+    }
+
+    // Can have many children
+    public function children()
+    {
+        return $this->hasMany('App\Place', 'parent');
+    }
+
+	// A place can belong to many people
     public function people()
     {
         return $this->belongsToMany('App\Person');
     }
 
+    // A place can have many tasks, but a task can only belong to place
     public function tasks()
     {
         return $this->hasMany('App\Task');
     }
     
+    // Switch status
 	public function getStatusAttribute($value) {
 		$status = $this->attributes['status'];
 		switch($status){
@@ -30,6 +46,7 @@ class Place extends Model
 		}
 	}
 
+	// Switch type
 	public function getTypeAttribute($value) {
 		$type = $this->attributes['type'];
 		switch($type){
@@ -57,6 +74,7 @@ class Place extends Model
 		}
 	}
 
+	// Switch country
 	public function getCountryAttribute($value) {
 		$country = $this->attributes['country'];
 		switch($country){
