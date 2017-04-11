@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Place extends Model
 {
 	// Fillable fields
-	public $fillable = ['name','status','type','note','image','phone','alt','email','web','title','address','address2','city','state','zip','country','fax','account','parent','people','person_id'];
+	public $fillable = ['name','status','type','category','note','image','phone','alt','email','web','title','address','address2','city','state','zip','country','fax','account','parent','refer','people','person_id'];
+
+	// Define default states for database, TODO: Config or database table
+	public $place_status = ['Inactive', 'Active'];
+	public $place_type = ['Locale', 'Company', 'Lead', 'Partner', 'Vendor', 'Competitor', 'Not-A-Fit'];
 
 	// Can have one parent 
     public function parent()
@@ -34,9 +38,9 @@ class Place extends Model
     }
     
     // Switch status
-	public function getStatusAttribute($value) {
-		$status = $this->attributes['status'];
-		switch($status){
+	public function getRealStatusAttribute($value) {
+		$real_status = $this->attributes['status'];
+		switch($real_status){
 			case 0:
 			return 'Inactive';
 			break;
@@ -47,29 +51,29 @@ class Place extends Model
 	}
 
 	// Switch type
-	public function getTypeAttribute($value) {
-		$type = $this->attributes['type'];
-		switch($type){
+	public function getRealTypeAttribute($value) {
+		$real_type = $this->attributes['type'];
+		switch($real_type){
 			case 0:
-			return 'Not-A-Fit';
+			return 'Locale';
 			break;
 			case 1:
-			return 'Unspecified';
+			return 'Company';
 			break;
 			case 2:
-			return 'Contact';
+			return 'Lead';
 			break;
 			case 3:
-			return 'Prospect';
-			break;
-			case 4:
 			return 'Partner';
 			break;
-			case 5:
+			case 4:
 			return 'Vendor';
 			break;
-			case 6:
+			case 5:
 			return 'Competitor';
+			break;
+			case 6:
+			return 'Not-A-Fit';
 			break;
 		}
 	}

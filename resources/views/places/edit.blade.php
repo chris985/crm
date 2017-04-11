@@ -16,30 +16,39 @@
 <article class="card">
 	<div class="card-header">
 		<div class="row">
-			<div class="col-md-10">
-				<div class="form-group">
-					<label class="text-muted" for="name"><i class="text-muted fa fa-building fa-fw mr-1"></i>Name</label>
-					<input id="name" class="form-control" name="name" type="text" aria-describedby="name" value="{{ $place->name }}">
+			<div class="col main">
+				<div class="form-group row">
+					<div class="col-md-12">
+						<label class="text-muted" for="name"><i class="text-muted fa fa-building fa-fw mr-1"></i>Name</label>
+						<input id="name" class="form-control" name="name" type="text" aria-describedby="name" value="{{ $place->name }}">
+					</div>
 				</div>
-				<div class="form-group">
-					<label class="text-muted" for="people"><i class="text-muted fa fa-building-o fa-fw mr-1"></i>Parent</label>
+				<div class="form-group row">
+					<div class="col-md-5">
+						<label class="text-muted" for="division"><i class="text-muted fa fa-tag fa-fw mr-1"></i>Division</label>
+						<input id="division" class="form-control" name="division" type="text" value="{{ $place->division }}" aria-describedby="division" >
+					</div>
+					<div class="col-md-7">
+						<label class="text-muted" for="people"><i class="text-muted fa fa-building-o fa-fw mr-1"></i>Parent</label>
 						<select class="form-control select" name="parent" >
 							<option value="" disabled selected>None</option>
 							@foreach ($parents as $parent)
 							<option value="{{ $parent->id }}">{{ $parent->name }}</option>
 							@endforeach 
 						</select>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-2">
 				<div class="form-group">
-					<label class="text-muted" for="type"><i class="text-muted fa fa-sitemap fa-fw mr-1"></i>Type</label>
-					{{ Form::select('type', ['0' => 'Not-A-Fit', '1' => 'Contact', '2' => 'Prospect', '3' => 'Partner', '4' => 'Vendor', '5' => 'Competitor'], $place->type, ['class' => 'form-control']) }}
-				</div>
-				<div class="form-group">
 					<label class="text-muted" for="status"><i class="text-muted fa fa-eye fa-fw mr-1"></i>Status</label>
 					{{ Form::select('status', ['0' => 'Inactive', '1' => 'Active'], $place->status, ['class' => 'form-control']) }}
 				</div>
+				<div class="form-group">
+					<label class="text-muted" for="type"><i class="text-muted fa fa-cubes fa-fw mr-1"></i>Type</label>
+					{{ Form::select('type', ['0' => 'Not-A-Fit', '1' => 'Contact', '2' => 'Prospect', '3' => 'Partner', '4' => 'Vendor', '5' => 'Competitor'], $place->type, ['class' => 'form-control']) }}
+				</div>
+
 			</div>
 		</div>
 	</div>
@@ -63,13 +72,13 @@
 					<input id="city" class="form-control" name="city" type="text" aria-describedby="city" value="{{ $place->city }}">
 				</div>
 			</div>
-			<div class="col-md-2">
+			<div class="col-md-3">
 				<div class="form-group">
 					<label class="text-muted" for="state" ><i class="text-muted fa fa-map fa-fw mr-1"></i>State/Province</label>
 					<input id="state" class="form-control" name="state" type="text" aria-describedby="state" value="{{ $place->state }}">
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-2">
 				<div class="form-group">
 					<label class="text-muted" for="zip"><i class="text-muted fa fa-location-arrow fa-fw mr-1"></i>Zip</label>
 					<input id="zip" class="form-control" name="zip" type="text" aria-describedby="zip" value="{{ $place->zip }}">
@@ -339,14 +348,6 @@
 					<label class="text-muted" for="phone"><i class="text-muted fa fa-phone fa-fw mr-1"></i>Phone</label>
 					<input id="phone" class="form-control" name="phone" type="text" aria-describedby="phone" value="{{ $place->phone }}">
 				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="form-group">
-					<label class="text-muted" for="email" ><i class="text-muted fa fa-envelope fa-fw mr-1"></i>Email</label>
-					<input id="email" class="form-control" name="email" type="text" aria-describedby="email" value="{{ $place->email }}">
-				</div>
-			</div>
-			<div class="col-md-6">
 				<div class="form-group">
 					<label class="text-muted" for="alt" ><i class="text-muted fa fa-mobile fa-fw mr-1"></i>Alt</label>
 					<input id="alt" class="form-control" name="alt" type="text" aria-describedby="alt" value="{{ $place->alt }}">
@@ -354,43 +355,77 @@
 			</div>
 			<div class="col-md-6">
 				<div class="form-group">
+					<label class="text-muted" for="email" ><i class="text-muted fa fa-envelope fa-fw mr-1"></i>Email</label>
+					<input id="email" class="form-control" name="email" type="text" aria-describedby="email" value="{{ $place->email }}">
+				</div>
+				<div class="form-group">
 					<label class="text-muted" for="web"><i class="text-muted fa fa-external-link fa-fw mr-1"></i>Web</label>
 					<input id="web" class="form-control" name="web" type="text" aria-describedby="web" value="{{ $place->web }}">
 				</div>
 			</div>
-			<div class="col">
+			<div class="col-md-12">
 				<div class="form-group">
-					<label class="text-muted" for="alt" ><i class="text-muted fa fa-fax fa-fw mr-1"></i>Fax</label>
-					<input id="alt" class="form-control" name="alt" type="text" aria-describedby="alt">
+					<label for="note"><i class="text-muted fa fa-sticky-note fa-fw mr-1"></i>Notes</label>
+					<textarea id="note" class="form-control" name="note" rows="3" value="{{ $place->note }}"></textarea>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-12">
 				<div class="form-group">
-					<label class="text-muted" for="web"><i class="text-muted fa fa-credit-card fa-fw mr-1"></i>Account Number</label>
-					<input id="web" class="form-control" name="web" type="text" aria-describedby="web">
+					<label class="text-muted" for="fax" ><i class="text-muted fa fa-fax fa-fw mr-1"></i>Fax</label>
+					<input id="fax" class="form-control" name="fax" type="text" aria-describedby="fax" value="{{ $place->fax }}">
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<div class="form-group">
-					<p class="text-muted"><i class="text-muted fa fa-photo fa-fw mr-1"></i>Photo</p>
-					@if(!empty($place->image))
-					<img class="float-left img-responsive rounded-circle mr-3" width="40" height="40" src="../../media\places\{{ $place->image }}" alt="" />
-					@endif
-					<label class="custom-file">
-						{!! Form::file('image', null, array('id' => 'image', 'class' => 'custom-file-control')) !!}
-						<span class="custom-file-control"></span>
-					</label>
+					<label class="text-muted" for="category"><i class="text-muted fa fa-credit-card fa-fw mr-1"></i>Category</label>
+					<input id="category" class="form-control" name="category" type="text" aria-describedby="category">
 				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+				<label class="text-muted" for="refer"><i class="text-muted fa fa-handshake-o fa-fw mr-1"></i>Refer</label>
+					<input id="refer" class="form-control" name="refer" type="text" aria-describedby="web" value="{{ $place->refer }}" >
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="text-muted" for="account"><i class="text-muted fa fa-credit-card fa-fw mr-1"></i>Account</label>
+					<input id="account" class="form-control" name="account" type="text" aria-describedby="account" value="{{ $place->account }}">
+				</div>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-md-4">
+				<label><i class="text-muted fa fa-photo fa-fw mr-1"></i>Photo</label><br />
+				@if (empty($place->image))
+				<img class="float-left rounded-circle mr-3" width="40" height="40" src="https://randomuser.me/api/portraits/men/{{ $place->id }}.jpg" alt="" />
+				@else
+				<img class="float-left rounded-circle mr-3" width="40" height="40" src="/../../storage/app/places/{{ $place->image }}" alt="" />
+				@endif
+				<label class="text-muted custom-file">
+					{{ Form::file('image', null, array('id' => 'image', 'class' => 'custom-file-control')) }}
+					<span class="custom-file-control"></span>
+				</label>
+				<p class="my-1"><input id="delete" name="delete" type="checkbox" aria-describedby="remove"> Delete</p>
+			</div>
+			<div class="col-md-8">
+				<label class="text-muted" for="email"><i class="text-muted fa fa-tags fa-fw mr-1"></i>Tags</label>
+				<select id="type" class="form-control" name="type" multiple="multiple">
+
+				</select>
 			</div>
 		</div>
 	</div>
 	<div class="card-footer text-muted">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="form-group">
-					<label for="note"><i class="text-muted fa fa-sticky-note fa-fw mr-1"></i>Notes</label>
-					<textarea id="note" class="form-control" name="note" rows="3"></textarea>
-				</div>
+		<div class="row align-items-center">
+			<div class="col-md-4">
+				<small><i class="fa fa-id-card fa-fw mr-1 text-muted"></i>ID#: {{ $place->id }}</small>
+			</div>
+			<div class="col-md-4">
+				<small><i class="fa fa-plus-square fa-fw text-muted"></i>Created: {{ $place->created_at }}</small>
+			</div>
+			<div class="col-md-4">
+				<small><i class="fa fa-pencil-square fa-fw text-muted"></i>Updated: {{ $place->updated_at }}</small>
 			</div>
 		</div>
 	</div>

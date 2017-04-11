@@ -27,7 +27,7 @@ class CreatePlacesTable extends Migration
             $table->string('alt')->nullable();
             $table->string('email')->nullable();
             $table->string('web')->nullable();
-            $table->string('title')->nullable();
+            $table->string('division')->nullable();
             $table->string('refer')->nullable();
             $table->string('address')->nullable();
             $table->string('address2')->nullable();

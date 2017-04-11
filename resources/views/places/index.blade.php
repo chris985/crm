@@ -10,42 +10,57 @@
     </div>
 </div>
 @endif
-    @if(!$places->isEmpty())
-    @foreach ($places as $key => $place)
-    <article class="card">
-        <div class="card-block row align-items-center">
-            <header class="col-md-6">
-                @if (empty($place->image))
-                <img class="float-left img-responsive rounded-circle mr-3" width="80" height="80" src="http://lorempixel.com/80/80/city/{{ $place->id }}" alt="" />
-                @else
-                <img class="float-left img-responsive rounded-circle mr-3" width="80" height="80" src="media\places\{{ $place->image }}" alt="" />
+@if(!$places->isEmpty())
+@foreach ($places as $key => $place)
+<article class="card">
+    <div class="card-block row align-items-center">
+        <header class="col-md-6">
+            @if (empty($place->image))
+            <img class="float-left img-responsive rounded-circle mr-3" width="80" height="80" src="http://lorempixel.com/80/80/city/{{ $place->id }}" alt="" />
+            @else
+            <img class="float-left img-responsive rounded-circle mr-3" width="80" height="80" src="/../../storage/app/places/{{ $place->image }}" alt="" />
+            @endif
+            <h1 class="card-title h4 pt-3"><a class="btn-text" href="{{ route('places.show', $place->id) }}">{{ $place->name }}</a></h1>
+            <h6 class="card-subtitle text-muted">
+                @if (!empty($place->address))
+                {{ $place->address }},
                 @endif
-                <h1 class="card-title h4 pt-3"><a class="btn-text" href="{{ route('places.show', $place->id) }}">{{ $place->name }}</a></h1>
-                <h6 class="card-subtitle text-muted">{{ $place->address }}{{ $place->address2 }}, {{ $place->city }}, {{ $place->state }}, {{ $place->zip }}</h6>
-            </header>
-            <div class="col-md-3">
-                @if (!empty($place->phone))
-                <p><i class="text-muted fa fa-phone fa-2x fa-fw mr-1 float-left"></i>{{ $place->phone }}</p>
+                @if (!empty($place->address2))
+                {{ $place->address2 }},
                 @endif
-            </div>
-            <div class="col-md-3">
-                @if (!empty($place->email))
-                <p><i class="text-muted fa fa-envelope fa-2x fa-fw mr-1 float-left"></i>{{ $place->email }}</p>
+                @if (!empty($place->city))
+                {{ $place->city }},
                 @endif
-            </div>
+                @if (!empty($place->state))
+                {{ $place->state }},
+                @endif
+                @if (!empty($place->zip))
+                {{ $place->zip }}
+                @endif
+            </h6>
+        </header>
+        @if (!empty($place->phone))
+        <div class="col-md-3">
+            <p><i class="text-muted fa fa-phone fa-2x fa-fw mr-1 float-left"></i>{{ $place->phone }}</p>
         </div>
-    </article>
-    @endforeach
-        <div class="py-3 px-3">
-        {!! $places->links() !!}
+        @endif
+        @if (!empty($place->email))
+        <div class="col-md-3">
+            <p><i class="text-muted fa fa-envelope fa-2x fa-fw mr-1 float-left"></i>{{ $place->email }}</p>
+        </div>
+        @endif
     </div>
-    @else
-    <article class="card">
-        <div class="card-block row align-items-center">
-            <p>No results found</p>
-        </div>
-    </article>
-    @endif
+</article>
+@endforeach
+@else
+<div class="card">
+    <div class="card-block row align-items-center">
+        <p>No results found</p>
+    </div>
+</div>
+@endif
+<div class="py-3 px-3">
+    {!! $places->links() !!}
 </div>
 @endsection
 

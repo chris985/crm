@@ -1,3 +1,4 @@
+
 @extends('common.app')
 @section('content')
 <article class="card">
@@ -5,52 +6,98 @@
         @if (empty($place->image))
         <img class="float-left img-responsive rounded-circle mr-3" width="160" height="160" src="http://lorempixel.com/160/160/city/{{ $place->id }}" alt="" />
         @else
-        <img class="float-left img-responsive rounded-circle mr-3" width="160" height="160" src="../media\places\{{ $place->image }}" alt="" />
+        <img class="float-left img-responsive rounded-circle mr-3" width="160" height="160" src="/../../storage/app/places/{{ $place->image }}" alt="" />
         @endif
-        <h2 class="h4 card-title pt-5">{{ $place->name }} {{ $place->parent }} <span class="float-md-right"><span class="badge badge-pill badge-default">{{ $place->status }}</span><span class="badge badge-pill badge-default ml-1">{{ $place->type }}</span></span></h2>
-        <p class="card-subtitle text-muted">
-            @if (!empty($place->division))
-            <i class="fa fa-diamond mr-1"></i>{{ $place->division }}
-            @endif
-        </p>
+        <p class="px-1 py-1 float-right"><span class="badge badge-default">{{ $place->real_status }}</span><span class="ml-3 badge badge-default">{{ $place->real_type }}</span></p>
+        <h1 class="h4 card-title pt-5">
+            {{ $place->name }}
+        </h1>
+        <h6 class="card-subtitle text-muted">
+            @if (!empty($person->division))
+            <i class="fa fa-tag mr-1"></i>{{ $place->division }}
+            @endif 
+        </h6>
     </div>
-    <div class="card-block">
-        <div class="row">
-            <div class="col-md-6">
-                <p><i class="text-muted fa fa-home fa-2x fa-fw float-left mr-4 mb-4"></i>{{ $place->address }}@if (!empty($place->address2)) {{ $place->address2 }}@endif<br />{{ $place->city }}, {{ $place->state }}, {{ $place->zip }}<br />{{ $place->country }}</p>
-            </div>
-            <div class="col-md-3">
-                <p><i class="text-muted fa fa-phone fa-2x fa-fw float-left mr-4 mb-4"></i>{{ $place->phone }}<br /><span class="mt-3">{{ $place->alt }}</span></p>
-            </div>
-            <div class="col-md-3">
-                <p><i class="text-muted fa fa-envelope fa-2x fa-fw float-left mr-4 mb-4"></i>{{ $place->email }}</p>
-            </div>
-            <div class="col-md-3">
-                <p><i class="text-muted fa fa-external-link fa-2x fa-fw float-left mr-4 mb-4"></i>{{ $place->web }}</p>
-            </div>
+    <div class="card-block row">
+        @if (!empty($place->address OR $place->address2 OR $place->city OR $place->state OR $place->zip OR $place->country))
+        <div class="col-md-4 pb-3">
+            <p><i class="text-muted fa fa-home fa-2x fa-fw float-left mr-4 mb-4"></i></p>
+            @if (!empty($place->address))
+            {{ $place->address }},
+            @endif
+            @if (!empty($place->address2))
+            <br />{{ $place->address2 }},
+            @endif
+            @if (!empty($place->city))
+            <br />{{ $place->city }},
+            @endif
+            @if (!empty($place->state))
+            {{ $place->state }},
+            @endif
+            @if (!empty($place->zip))
+            {{ $place->zip }}
+            @endif
+            @if (!empty($place->country))
+            <br />{{ $place->country }}
+            @endif
         </div>
+        @endif
+        @if (!empty($place->phone))
+        <div class="col-md-3 py-1">
+            <p class="float-left mr-3"><i class="fa fa-phone fa-2x fa-fw text-muted"></i></p>
+            <p>{{ $place->phone }}<br />{{ $place->alt }}</p>
+        </div>
+        @endif
+        @if (!empty($place->email))
+        <div class="col-md-3 py-1">
+            <p class="float-left mr-3"><i class="fa fa-envelope fa-2x fa-fw text-muted"></i></p>
+            <p>{{ $place->email }}</p>
+        </div>
+        @endif
+        @if (!empty($place->fax))
+        <div class="col-md-3 py-1">
+            <p class="float-left mr-3"><i class="fa fa-fax fa-2x fa-fw text-muted"></i></p>
+            <p>{{ $place->fax }}</p>
+        </div>
+        @endif
+        @if (!empty($place->category))
+        <div class="col-md-3 py-1">
+            <p class="float-left mr-3"><i class="fa fa-external-link fa-2x fa-fw text-muted"></i></p>
+            <p>{{ $place->category }}</p>
+        </div>
+        @endif
+        @if (!empty($place->refer))
+        <div class="col-md-3 py-1">
+            <p class="float-left mr-3"><i class="fa fa-handshake-o fa-2x fa-fw text-muted"></i></p>
+            <p>{{ $place->refer }}</p>
+        </div>
+        @endif
+        @if (!empty($place->account))
+        <div class="col-md-3 py-1">
+            <p class="float-left mr-3"><i class="fa fa-credit-card fa-2x fa-fw text-muted"></i></p>
+            <p>{{ $place->account }}</p>
+        </div>
+        @endif
     </div>
     @if (!empty($place->note))
-    <div class="card-block">
-        <div class="row">
-            <div class="col">
-                <hr>
-                <i class="fa fa-sticky-note mr-1 text-muted"></i>Notes: <br />
-                {{ $place->note }}
-            </div>
+    <div class="card-block row">
+        <div class="col-md-12 py-1">
+            <hr>
+            <i class="fa fa-sticky-note mr-1 text-muted"></i>Notes: <br />
+            {{ $place->note }}
         </div>
     </div>
     @endif
-    <div class="card-footer card-block text-muted">
-        <div class="row">
-            <div class="col-md-3">
-                <small><i class="text-muted fa fa-id-card fa-fw mr-1"></i>ID#: {{$place->id}}</small>
+    <div class="card-footer card-block">
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <small><i class="fa fa-id-card fa-fw mr-1 text-muted"></i>ID#: {{ $place->id }}</small>
             </div>
-            <div class="col-md-3">
-                <small><i class="text-muted fa fa-plus-square fa-fw mr-1"></i>Created: {{$place->created_at}}</small>
+            <div class="col-md-4">
+                <small><i class="fa fa-plus-square fa-fw text-muted"></i>Created: {{ $place->created_at }}</small>
             </div>
-            <div class="col-md-3">
-                <small><i class="text-muted fa fa-pencil-square fa-fw mr-1"></i>Updated: {{$place->updated_at}}</small>
+            <div class="col-md-4">
+                <small><i class="fa fa-pencil-square fa-fw text-muted"></i>Updated: {{ $place->updated_at }}</small>
             </div>
         </div>
     </div>
@@ -72,22 +119,21 @@
                             {{ $person->title }}
                         </h6>
                     </header>
+                    @if (!empty($person->phone))
                     <div class="col-md-3">
-                        @if (!empty($person->phone))
                         <p><i class="text-muted fa fa-phone fa-2x fa-fw mr-1 float-left"></i>{{ $person->phone }}</p>
-                        @endif
                     </div>
-                    <div class="col-md-3">
-                        @if (!empty($person->email))
-                        <p><i class="text-muted fa fa-envelope fa-2x fa-fw mr-1 float-left"></i>{{ $person->email }}</p>
-                        @endif
-                    </div>
+                    @endif
+                    @if (!empty($person->email))<div class="col-md-3">
+                    <p><i class="text-muted fa fa-envelope fa-2x fa-fw mr-1 float-left"></i>{{ $person->email }}</p>
                 </div>
+                @endif
             </div>
         </div>
-        @endforeach
     </div>
-    @endif
+    @endforeach
+</div>
+@endif
 </article>
 @endsection
 

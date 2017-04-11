@@ -50,23 +50,7 @@ public function store(Request $request)
         'name' => 'required',
         'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ));
-    $place  = new Place; // New Model Instandce
-    $place->name = $request->name;
-    $place->status = $request->status;
-    $place->type = $request->type;
-    $place->division = $request->division;
-    $place->phone = $request->phone;
-    $place->email = $request->email;
-    $place->alt = $request->alt;
-    $place->web = $request->web;
-    $place->fax = $request->fax;
-    $place->address = $request->address;
-    $place->address2 = $request->address2;
-    $place->city = $request->city;
-    $place->state = $request->state;
-    $place->zip = $request->zip;
-    $place->country = $request->country;
-    $place->note = $request->note;
+    $place = new Place($request->except(['parent','image']));
     if($request->hasFile('image')){ // If a file was attached
         $image = $request->file('image'); // Get the image
         $filename = time() . '.' . $image->getClientOriginalExtension(); // Randomize the filename
@@ -74,9 +58,7 @@ public function store(Request $request)
         $place->image = $filename; // Save filename in database
         $place->save(); // Save the place
     };
-    $people = $request->people; // Get any attached people
     $place->save(); // Save the place
-    $place->people()->attach($people); // Attach people
     return redirect()->route('places.index') // Send to the view
     ->with('success','Item created successfully');
 }
@@ -123,11 +105,37 @@ public function update(Request $request, $id)
     $place->name = $request->name;
     $place->status = $request->status;
     $place->type = $request->type;
-    $place->division = $request->division;
+    $place->category = $request->category;
+    $place->note = $request->note;
+    if(isset($request->delete)) { // If delete checkbox is checked
+        if(!empty($place->image)) { // And there is an image file to delete
+                $file_path = public_path() . '../../storage/app/places/'. $place->image; // Set path to image
+                unlink($file_path); // Delete existing image
+                $place->image = NULL; // Delete db link
+            }
+    } else { // If delete is not checked, check if we need to process images
+        if($request->hasFile('image')){ // If an image is attached
+            if(empty($place->image)) { // And there currently is no image assigned
+                $image = $request->file('image'); // Grab image file
+                $filename = time() . '.' . $image->getClientOriginalExtension(); // Randomize filename
+                //Image::make($image)->resize(160, 160)->save( public_path() . '\\media\\people\\'. $filename ); // Save the file
+                Image::make($image)->resize(160, 160)->save( public_path() . '../../storage/app/places/'. $filename ); // Save the file
+                $place->image = $filename; // Save filename in db
+            } else { // If already has an image
+                $file_path = public_path() . '../../storage/app/places/'. $place->image; // Set path to image
+                unlink($file_path); // Delete existing image
+                $image = $request->file('image'); // Set path
+                $filename = time() . '.' . $image->getClientOriginalExtension(); // Randomize filename
+                Image::make($image)->resize(160, 160)->save( public_path() . '../../storage/app/places/'. $filename ); // Save new file
+                $place->image = $filename; // Save new filename in db
+            }
+        }
+    }
     $place->phone = $request->phone;
     $place->email = $request->email;
     $place->alt = $request->alt;
     $place->web = $request->web;
+    $place->division = $request->division;
     $place->fax = $request->fax;
     $place->address = $request->address;
     $place->address2 = $request->address2;
@@ -135,15 +143,10 @@ public function update(Request $request, $id)
     $place->state = $request->state;
     $place->zip = $request->zip;
     $place->country = $request->country;
-    $place->note = $request->note;
+    $place->category = $request->category;
+    $place->refer = $request->refer;
+    $place->account = $request->account;
     $place->parent = $request->parent;
-    if($request->hasFile('image')){ // If there is an image
-        $image = $request->file('image'); // Get the image
-        $filename = time() . '.' . $image->getClientOriginalExtension(); // Change the filename
-        Image::make($image)->resize(160, 160)->save( public_path() . '\\media\\places\\'. $filename ); // Save the image
-        $place->image = $filename; // Save the name in database
-        $place->update(); // Update the place
-    };
     $place->update(); // Update the place
     return redirect()->route('places.index') // Return the view
     ->with('success','Place updated successfully');

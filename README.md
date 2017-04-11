@@ -67,7 +67,7 @@ The app is built to play off of the "Person, Place, Thing" idea. These 3 core ar
 
 * __Tasks__ - These are all the items you need to complete. Tasks can be either be a one-off service ticket, or a project that consists of a bunch of individual tasks. (You may call them "Projects, Service Tickets, To-Dos")
 
-* __People__- Contacts within your app. People are physical human beings and can be associated with one or more places that they work with or associate with. (You may call them "Contacts, Leads, Prospects")
+* __People__ - Contacts within your app. People are physical human beings and can be associated with one or more places that they work with or associate with. (You may call them "Contacts, Leads, Prospects")
 
 * __Places__ - locations, either a business or company, or a location of interest such as a meeting location. (You may call them "Companies, Vendors")
 
@@ -108,10 +108,10 @@ The database structure has been moved to `docs/database_schema.xlsx` which shows
 
 ## 3.0   WHAT'S NEW
 ```
-People section is mostly complete!
+People and Places sections are majorly complete!
 Cleaned up and normalized views, edited layouts, views by implementing global terms in People class. Eventually this will be a database or config file, cleaned up variables that weren't printing out or saving yet.
 New fields to track referrals and account numbers.
-Moved storage location for People images to App/storage/people which made more sense.
+Moved storage location for images to App/storage/item which made more sense.
 DB_schema changed, added new "category" column to every item, normalized structure a bit, in the future
 Added database_schema file and "docs" directory
 Now possible to "logout" from system. Error in 0.0.0.4
