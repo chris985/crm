@@ -9,22 +9,20 @@ class Task extends Model
     // Fillable fields
     public $fillable = ['name','status','type','category','note','date','due','priority','parent','people','places'];
 
+    // Define default states for database, TODO: Config or database table
+    public $task_status = ['Closed', 'Open', 'In Progress', 'Hold', 'Waiting', 'Scheduled'];
+    public $task_type = ['Task', 'Project', 'Event', 'Reminder'];
+
     // Each task can belong to one person
     public function people()
     {
         return $this->belongsToMany('App\Person');
     }
 
-    // Each task can belong to one place
-    public function places()
-    {
-        return $this->belongsToMany('App\Place');
-    }
-
-    // Switch status
-    public function getStatusAttribute($value) {
-        $status = $this->attributes['status'];
-        switch($status){
+    // Switch Status
+    public function getRealStatusAttribute($value) {
+        $real_status = $this->attributes['status'];
+        switch($real_status){
             case 0:
             return 'Inactive';
             break;
@@ -34,18 +32,18 @@ class Task extends Model
         }
     }
 
-    // Switch type
-    public function getTypeAttribute($value) {
-        $type = $this->attributes['type'];
-        switch($type){
+    // Switch Type
+    public function getRealTypeAttribute($value) {
+        $real_type = $this->attributes['type'];
+        switch($real_type){
             case 0:
-            return 'Not-A-Fit';
-            break;
-            case 1:
             return 'Unspecified';
             break;
-            case 2:
+            case 1:
             return 'Contact';
+            break;
+            case 2:
+            return 'Client';
             break;
             case 3:
             return 'Prospect';
@@ -58,6 +56,9 @@ class Task extends Model
             break;
             case 6:
             return 'Competitor';
+            break;
+            case 7:
+            return 'Not-A-Fit';
             break;
         }
     }

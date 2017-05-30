@@ -116,7 +116,7 @@
             {{-- Check if logged in --}}
             @if (Auth::check()) 
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link disabled" href="{{ route('tasks.index') }}"><i class="fa fa-leaf fa-fw"></i>&nbsp;Tasks</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('tasks.index') }}"><i class="fa fa-leaf fa-fw"></i>&nbsp;Tasks</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('people.index') }}"><i class="fa fa-group fa-fw"></i>&nbsp;People</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('places.index') }}"><i class="fa fa-building fa-fw"></i>&nbsp;Places</a></li>
                 <li class="nav-item"><a class="nav-link disabled" href="#"><i class="fa fa-money fa-fw"></i>&nbsp;Money</a></li>
