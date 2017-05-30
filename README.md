@@ -108,21 +108,13 @@ The database structure has been moved to `docs/database_schema.xlsx` which shows
 
 ## 3.0   WHAT'S NEW
 ```
-People and Places sections are majorly complete!
-Cleaned up and normalized views, edited layouts, views by implementing global terms in People class. Eventually this will be a database or config file, cleaned up variables that weren't printing out or saving yet.
-New fields to track referrals and account numbers.
-Moved storage location for images to App/storage/item which made more sense.
-DB_schema changed, added new "category" column to every item, normalized structure a bit, in the future
-Added database_schema file and "docs" directory
-Now possible to "logout" from system. Error in 0.0.0.4
-Very basic foundation to begin implementing an auto-installer/updater. Will need a LOT of work. You can preview it at app/public/install.
-Filled in some more documentation, commenting where possible
+Work on Tasks area, view, edit, index.
 ```
 
 ## 3.1   WHAT'S NEXT
 ```
+Finish Tasks area, configure hierarchy so tasks can belong to a parent task
 Next versions will focus on better commenting/documentation
-Finish off re-code of People and Places areas
 Move media storage to storage directory, and remove from "public" location
 ```
 
