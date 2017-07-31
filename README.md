@@ -10,7 +10,7 @@ My idea with this app is to build a brand-new CRM that looks great and has all t
 ** THIS APP IS IN HEAVY DEVELOPMENT, THIS IS NOT A "PUBLIC" RELEASE BY ANY STRETCH OF THE IMAGINATION. **
 
 ## LATEST NEWS
-We are rapidly approaching 0.0.1.0 a major alpha release candidate! The LAST stable build is 0.0.0.8.
+We are rapidly approaching 0.0.1.0 a major alpha release candidate! **The LAST stable build is 0.0.0.8. **
 
 Minor versions from that version onwards will work towards this new release candidate which includes a major code revamp as we migrate to using [Semantic UI](https://semantic-ui.com/) as our new front-end framework. In addition, there will be a more robust and complete user-interface, integrated search, and beginnings of user administration.
 
