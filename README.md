@@ -9,8 +9,13 @@ My idea with this app is to build a brand-new CRM that looks great and has all t
 
 ** THIS APP IS IN HEAVY DEVELOPMENT, THIS IS NOT A "PUBLIC" RELEASE BY ANY STRETCH OF THE IMAGINATION. **
 
+## LATEST NEWS
+We are rapidly approaching 0.0.1.0 a major alpha release candidate! The LAST stable build is 0.0.0.8.
+
+Minor versions from that version onwards will work towards this new release candidate which includes a major code revamp as we migrate to using [Semantic UI](https://semantic-ui.com/) as our new front-end framework. In addition, there will be a more robust and complete user-interface, integrated search, and beginnings of user administration.
+
 ## 1.1 CONTENTS
-* 1.0   INTRO + WELCOME
+* 1.0   INTRO + WELCOME + LATEST NEWS
 * 1.1   CONTENTS
 * 1.2   SYSTEM REQUIREMENTS
 * 1.3   INSTALLATION
@@ -126,6 +131,7 @@ Additional fields are also to be added to the People and Places sections to comp
 ## 3.3   ROADMAP
 The roadmap is a look at things to come. As the app develops, these are the features that are planned, this list is subject to change, but it is in order.
 ```
+* Code REVAMP switching Bootstrap to Semantic UI
 * Complete all basic areas
 * Complete all initial fields and database schema
 * Authentication
@@ -165,4 +171,5 @@ __Author__: Christopher Martone: http://christophermartone.com
 __Publisher__: Starcresc Interactive: http://starcresc.com
 
 ## 3.5   LICENSE
-This app is provided "AS IS" and is not intended for use in a production environment currently. Many areas are still in rapid development and the database schema has not yet been finalized. This app is provided freely for use and welcomes any user contributions to its code base. Under no circumstances is it provided with any warranty expressed or implied by either the Author or the Publisher. (C) Copyright 2017 Starcresc. (C) Copyright 2017 Christopher Martone. All Rights Reserved.
+This app is provided "AS IS" and is not intended for use in a production environment, currently. Many areas are still in rapid development and the database schema has not yet been finalized. This app is provided freely for use and welcomes any user contributions to its code base. Under no circumstances is it provided with any warranty expressed or implied by either the Author or the Publisher. (C) Copyright 2017 Starcresc. (C) Copyright 2017 Christopher Martone. All Rights Reserved. Licensed Under [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/) [Full License Terms](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
+
