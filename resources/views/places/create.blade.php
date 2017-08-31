@@ -34,25 +34,14 @@
 							<option value="" disabled selected>None</option>
 							@foreach ($parents as $parent)
 							<option value="{{ $parent->id }}">{{ $parent->name }}</option>
-							@endforeach 
+							@endforeach
 						</select>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-2">
-				<div class="form-group">
-					<label class="text-muted" for="status"><i class="text-muted fa fa-eye fa-fw mr-1"></i>Status</label>
-					{{ Form::select('status', $place->place_status, null, ['class' => 'form-control']) }}
-				</div>
-				<div class="form-group">
-					<label class="text-muted" for="type"><i class="text-muted fa fa-cubes fa-fw mr-1"></i>Type</label>
-					{{ Form::select('type', $place->place_type, null, ['class' => 'form-control']) }}
-				</div>
-
-			</div>
 		</div>
 	</div>
-	<div class="card-block">
+	<div class="card-body">
 		<div class="row">
 			<div class="col-md-6">
 				<div class="form-group">
@@ -365,7 +354,7 @@
 			</div>
 			<div class="col-md-12">
 				<div class="form-group">
-					<label for="note"><i class="text-muted fa fa-sticky-note fa-fw mr-1"></i>Notes</label>
+					<label for="note" class="text-muted"><i class="text-muted fa fa-sticky-note fa-fw mr-1"></i>Notes</label>
 					<textarea id="note" class="form-control" name="note" rows="3"></textarea>
 				</div>
 			</div>
@@ -383,7 +372,7 @@
 			</div>
 			<div class="col-md-4">
 				<div class="form-group">
-				<label class="text-muted" for="refer"><i class="text-muted fa fa-handshake-o fa-fw mr-1"></i>Refer</label>
+					<label class="text-muted" for="refer"><i class="text-muted fa fa-handshake-o fa-fw mr-1"></i>Refer</label>
 					<input id="refer" class="form-control" name="refer" type="text" aria-describedby="web">
 				</div>
 			</div>
@@ -396,8 +385,8 @@
 		</div>
 		<div class="form-group row">
 			<div class="col-md-4">
-				<label><i class="text-muted fa fa-photo fa-fw mr-1"></i>Photo</label><br />
-				
+				<label class="text-muted"><i class="text-muted fa fa-photo fa-fw mr-1"></i>Photo</label><br />
+
 				<label class="text-muted custom-file">
 					{{ Form::file('image', null, array('id' => 'image', 'class' => 'custom-file-control')) }}
 					<span class="custom-file-control"></span>
@@ -427,6 +416,17 @@
 </article>
 @endsection
 
+@section('aside')
+<div class="form-group">
+	<label class="text-white" for="status"><i class="text-white fa fa-eye fa-fw mr-1"></i>Status</label>
+	{{ Form::select('status', $place->place_status, null, ['class' => 'form-control']) }}
+</div>
+<div class="form-group">
+	<label class="text-white" for="type"><i class="text-white fa fa-cubes fa-fw mr-1"></i>Type</label>
+	{{ Form::select('type', $place->place_type, null, ['class' => 'form-control']) }}
+</div>
+@endsection
+
 @section('title')
 New Place
 @endsection
@@ -436,7 +436,7 @@ mx-3 card-open
 @endsection
 
 @section('actions')
-<li class="nav-item"><button class="nav-link btn-link" type="submit"><i class="fa fa-save fa-fw"></i></button></li>
+<li class="nav-item"><button class="nav-link btn-link text-white" type="submit"><i class="fa fa-save fa-fw"></i></button></li>
 @endsection
 
 @section('form-open')

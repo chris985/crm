@@ -38,19 +38,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-2">
-				<div class="form-group mb-3">
-					<label class="text-muted" for="status"><i class="text-muted fa fa-eye fa-fw mr-1"></i>Status</label>
- 					{{ Form::select('status', $person->person_status, $person->status, ['class' => 'form-control']) }}
-				</div>
-				<div class="form-group mb-3">
-					<label class="text-muted" for="type"><i class="text-muted fa fa-cubes fa-fw mr-1"></i>Type</label>
- 					{{ Form::select('type', $person->person_type, $person->type, ['class' => 'form-control']) }}
-				</div>
-			</div>
 		</div>
 	</div>
-	<div class="card-block">
+	<div class="card-body">
 		<div class="form-group row">
 			<div class="col-md-6 mb-3">
 				<label class="text-muted" for="phone"><i class="text-muted fa fa-phone fa-fw mr-1"></i>Phone</label>
@@ -73,11 +63,11 @@
 		</div>
 		<div class="form-group row">
 			<div class="col-md-12">
-				<label for="note"><i class="text-muted fa fa-sticky-note fa-fw mr-1"></i>Notes</label>
+				<label for="note" class="text-muted"><i class="text-muted fa fa-sticky-note fa-fw mr-1"></i>Notes</label>
 				<textarea id="note" class="form-control" name="note" rows="3"></textarea>
 			</div>
 		</div>
-	<div class="form-group row">
+		<div class="form-group row">
 			<div class="col-md-3 mb-3">
 				<label class="text-muted" for="email"><i class="text-muted fa fa-sitemap fa-fw mr-1"></i>Category</label>
 				<input id="tags" class="form-control" name="tags" type="text" aria-describedby="tags">
@@ -105,12 +95,26 @@
 			</div>
 			<div class="col-md-8 mb-1">
 				<label class="text-muted" for="email"><i class="text-muted fa fa-tags fa-fw mr-1"></i>Tags</label>
-					<select id="type" class="form-control" name="type" multiple="multiple">
-						
-					</select>
+				<select id="type" class="form-control" name="type" multiple="multiple">
+
+				</select>
 			</div>
 		</div>
 	</div>
+	<div class="card-footer">
+		<label></label>
+	</div>
+</div>
+@endsection
+
+@section('aside')
+<div class="form-group mb-3">
+	<label class="text-white" for="status"><i class="text-white fa fa-eye fa-fw mr-1"></i>Status</label>
+	{{ Form::select('status', $person->person_status, $person->status, ['class' => 'form-control']) }}
+</div>
+<div class="form-group mb-3">
+	<label class="text-white" for="type"><i class="text-white fa fa-cubes fa-fw mr-1"></i>Type</label>
+	{{ Form::select('type', $person->person_type, $person->type, ['class' => 'form-control']) }}
 </div>
 @endsection
 
@@ -119,7 +123,7 @@ New
 @endsection
 
 @section('actions')
-<li class="nav-item"><button class="nav-link btn-link" type="submit"><i class="fa fa-save fa-fw"></i></button></li>
+<li class="nav-item"><button class="nav-link btn-link text-white" type="submit"><i class="fa fa-save fa-fw"></i></button></li>
 @endsection
 
 @section('page')

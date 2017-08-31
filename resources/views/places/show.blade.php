@@ -15,7 +15,7 @@
         <h6 class="card-subtitle text-muted">
             @if (!empty($person->division))
             <i class="fa fa-tag mr-1"></i>{{ $place->division }}
-            @endif 
+            @endif
         </h6>
     </div>
     <div class="card-block row">
@@ -150,9 +150,9 @@ mx-3 card-open
 @endsection
 
 @section('actions')
-<li class="nav-item"><a class="nav-link btn-link" href="{{ route('places.edit', $place->id) }}"><i class="fa fa-edit fa-fw"></i></a></li>
-<li class="nav-item"><button class="nav-link btn-link" type="button" data-toggle="modal" data-target="#modal"><i class="fa fa-trash fa-fw"></i></button></li>
-<li class="nav-item"><a class="nav-link btn-link" href="{{ route('places.create') }}"><i class="fa fa-plus fa-fw"></i></a></li>
+<li class="nav-item"><a class="nav-link btn-link text-white" href="{{ route('places.edit', $place->id) }}"><i class="fa fa-edit fa-fw"></i></a></li>
+<li class="nav-item"><button class="nav-link btn-link text-white" type="button" data-toggle="modal" data-target="#modal"><i class="fa fa-trash fa-fw"></i></button></li>
+<li class="nav-item"><a class="nav-link btn-link text-white" href="{{ route('places.create') }}"><i class="fa fa-plus fa-fw"></i></a></li>
 @endsection
 
 @section('modal')

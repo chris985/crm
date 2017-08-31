@@ -12,8 +12,9 @@
 @endif
 
 @if(!$tasks->isEmpty())
+<div class="card-list">
 @foreach ($tasks as $key => $task)
-<article class="card">
+<article class="card my-3 p-1">
 	<div class="card-block row align-items-center">
 		<header class="col-md-9">
 			@if(empty($task->status))
@@ -22,11 +23,11 @@
 			<img class="float-left rounded-circle mr-3" width="80" height="80" src="http://placehold.it/80/000000/ffffff?text={{ $task->real_status }}" alt="" />
 			@endif
 			<h1 class="card-title h4 pt-3"><a class="btn-text" href="{{ route('tasks.show', $task->id) }}">{{ $task->name }}</a></h1>
-			<h6 class="card-subtitle text-muted">
+			<p class="card-subtitle text-muted">
 				@if (!empty($task->note))
 				<i class="fa fa-tag mr-1"></i>{{ str_limit($task->note, $limit = 100, $end = '...') }}
-				@endif 
-			</h6>
+				@endif
+			</p>
 		</header>
 		<div class="col-md-3">
 			<p><i class="text-muted fa fa-phone fa-2x fa-fw mr-1 float-left"></i>{{ $task->due }}</p>
@@ -34,6 +35,7 @@
 	</div>
 </article>
 @endforeach
+</div>
 @else
 <div class="card">
 	<div class="card-block row align-items-center">
