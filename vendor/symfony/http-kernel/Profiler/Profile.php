@@ -43,12 +43,7 @@ class Profile
      */
     private $children = array();
 
-    /**
-     * Constructor.
-     *
-     * @param string $token The token
-     */
-    public function __construct($token)
+    public function __construct(string $token)
     {
         $this->token = $token;
     }
@@ -75,8 +70,6 @@ class Profile
 
     /**
      * Sets the parent token.
-     *
-     * @param Profile $parent
      */
     public function setParent(Profile $parent)
     {
@@ -156,7 +149,7 @@ class Profile
     /**
      * Returns the time.
      *
-     * @return string The time
+     * @return int The time
      */
     public function getTime()
     {
@@ -167,6 +160,9 @@ class Profile
         return $this->time;
     }
 
+    /**
+     * @param int $time The time
+     */
     public function setTime($time)
     {
         $this->time = $time;
@@ -213,8 +209,6 @@ class Profile
 
     /**
      * Adds the child token.
-     *
-     * @param Profile $child
      */
     public function addChild(Profile $child)
     {
@@ -265,8 +259,6 @@ class Profile
 
     /**
      * Adds a Collector.
-     *
-     * @param DataCollectorInterface $collector A DataCollectorInterface instance
      */
     public function addCollector(DataCollectorInterface $collector)
     {

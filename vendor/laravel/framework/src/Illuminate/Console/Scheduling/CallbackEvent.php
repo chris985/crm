@@ -5,7 +5,6 @@ namespace Illuminate\Console\Scheduling;
 use LogicException;
 use InvalidArgumentException;
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Contracts\Cache\Repository as Cache;
 
 class CallbackEvent extends Event
 {
@@ -26,14 +25,14 @@ class CallbackEvent extends Event
     /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Contracts\Cache\Repository  $cache
+     * @param  \Illuminate\Console\Scheduling\EventMutex  $mutex
      * @param  string  $callback
      * @param  array  $parameters
      * @return void
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(Cache $cache, $callback, array $parameters = [])
+    public function __construct(EventMutex $mutex, $callback, array $parameters = [])
     {
         if (! is_string($callback) && ! is_callable($callback)) {
             throw new InvalidArgumentException(
@@ -41,7 +40,7 @@ class CallbackEvent extends Event
             );
         }
 
-        $this->cache = $cache;
+        $this->mutex = $mutex;
         $this->callback = $callback;
         $this->parameters = $parameters;
     }
@@ -56,41 +55,49 @@ class CallbackEvent extends Event
      */
     public function run(Container $container)
     {
-        if ($this->description) {
-            $this->cache->put($this->mutexName(), true, 1440);
+        if ($this->description && $this->withoutOverlapping &&
+            ! $this->mutex->create($this)) {
+            return;
         }
+
+        register_shutdown_function(function () {
+            $this->removeMutex();
+        });
+
+        parent::callBeforeCallbacks($container);
 
         try {
             $response = $container->call($this->callback, $this->parameters);
         } finally {
             $this->removeMutex();
-        }
 
-        parent::callAfterCallbacks($container);
+            parent::callAfterCallbacks($container);
+        }
 
         return $response;
     }
 
     /**
-     * Remove the mutex file from disk.
+     * Clear the mutex for the event.
      *
      * @return void
      */
     protected function removeMutex()
     {
         if ($this->description) {
-            $this->cache->forget($this->mutexName());
+            $this->mutex->forget($this);
         }
     }
 
     /**
      * Do not allow the event to overlap each other.
      *
+     * @param  int  $expiresAt
      * @return $this
      *
      * @throws \LogicException
      */
-    public function withoutOverlapping()
+    public function withoutOverlapping($expiresAt = 1440)
     {
         if (! isset($this->description)) {
             throw new LogicException(
@@ -98,9 +105,33 @@ class CallbackEvent extends Event
             );
         }
 
+        $this->withoutOverlapping = true;
+
+        $this->expiresAt = $expiresAt;
+
         return $this->skip(function () {
-            return $this->cache->has($this->mutexName());
+            return $this->mutex->exists($this);
         });
+    }
+
+    /**
+     * Allow the event to only run on one server for each cron expression.
+     *
+     * @return $this
+     *
+     * @throws \LogicException
+     */
+    public function onOneServer()
+    {
+        if (! isset($this->description)) {
+            throw new LogicException(
+                "A scheduled event name is required to only run on one server. Use the 'name' method before 'onOneServer'."
+            );
+        }
+
+        $this->onOneServer = true;
+
+        return $this;
     }
 
     /**

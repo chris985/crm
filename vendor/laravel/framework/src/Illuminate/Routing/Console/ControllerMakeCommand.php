@@ -37,13 +37,25 @@ class ControllerMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        if ($this->option('model')) {
-            return __DIR__.'/stubs/controller.model.stub';
+        $stub = null;
+
+        if ($this->option('parent')) {
+            $stub = '/stubs/controller.nested.stub';
+        } elseif ($this->option('model')) {
+            $stub = '/stubs/controller.model.stub';
         } elseif ($this->option('resource')) {
-            return __DIR__.'/stubs/controller.stub';
+            $stub = '/stubs/controller.stub';
         }
 
-        return __DIR__.'/stubs/controller.plain.stub';
+        if ($this->option('api') && is_null($stub)) {
+            $stub = '/stubs/controller.api.stub';
+        } elseif ($this->option('api') && ! is_null($stub)) {
+            $stub = str_replace('.stub', '.api.stub', $stub);
+        }
+
+        $stub = $stub ?? '/stubs/controller.plain.stub';
+
+        return __DIR__.$stub;
     }
 
     /**
@@ -71,20 +83,12 @@ class ControllerMakeCommand extends GeneratorCommand
 
         $replace = [];
 
+        if ($this->option('parent')) {
+            $replace = $this->buildParentReplacements();
+        }
+
         if ($this->option('model')) {
-            $modelClass = $this->parseModel($this->option('model'));
-
-            if (! class_exists($modelClass)) {
-                if ($this->confirm("A {$modelClass} model does not exist. Do you want to generate it?", true)) {
-                    $this->call('make:model', ['name' => $modelClass]);
-                }
-            }
-
-            $replace = [
-                'DummyFullModelClass' => $modelClass,
-                'DummyModelClass' => class_basename($modelClass),
-                'DummyModelVariable' => lcfirst(class_basename($modelClass)),
-            ];
+            $replace = $this->buildModelReplacements($replace);
         }
 
         $replace["use {$controllerNamespace}\Controller;\n"] = '';
@@ -92,6 +96,51 @@ class ControllerMakeCommand extends GeneratorCommand
         return str_replace(
             array_keys($replace), array_values($replace), parent::buildClass($name)
         );
+    }
+
+    /**
+     * Build the replacements for a parent controller.
+     *
+     * @return array
+     */
+    protected function buildParentReplacements()
+    {
+        $parentModelClass = $this->parseModel($this->option('parent'));
+
+        if (! class_exists($parentModelClass)) {
+            if ($this->confirm("A {$parentModelClass} model does not exist. Do you want to generate it?", true)) {
+                $this->call('make:model', ['name' => $parentModelClass]);
+            }
+        }
+
+        return [
+            'ParentDummyFullModelClass' => $parentModelClass,
+            'ParentDummyModelClass' => class_basename($parentModelClass),
+            'ParentDummyModelVariable' => lcfirst(class_basename($parentModelClass)),
+        ];
+    }
+
+    /**
+     * Build the model replacement values.
+     *
+     * @param  array  $replace
+     * @return array
+     */
+    protected function buildModelReplacements(array $replace)
+    {
+        $modelClass = $this->parseModel($this->option('model'));
+
+        if (! class_exists($modelClass)) {
+            if ($this->confirm("A {$modelClass} model does not exist. Do you want to generate it?", true)) {
+                $this->call('make:model', ['name' => $modelClass]);
+            }
+        }
+
+        return array_merge($replace, [
+            'DummyFullModelClass' => $modelClass,
+            'DummyModelClass' => class_basename($modelClass),
+            'DummyModelVariable' => lcfirst(class_basename($modelClass)),
+        ]);
     }
 
     /**
@@ -126,6 +175,10 @@ class ControllerMakeCommand extends GeneratorCommand
             ['model', 'm', InputOption::VALUE_OPTIONAL, 'Generate a resource controller for the given model.'],
 
             ['resource', 'r', InputOption::VALUE_NONE, 'Generate a resource controller class.'],
+
+            ['parent', 'p', InputOption::VALUE_OPTIONAL, 'Generate a nested resource controller class.'],
+
+            ['api', null, InputOption::VALUE_NONE, 'Exclude the create and edit methods from the controller.'],
         ];
     }
 }

@@ -107,7 +107,7 @@ class PasswordBroker implements PasswordBrokerContract
      * Validate a password reset for the given credentials.
      *
      * @param  array  $credentials
-     * @return \Illuminate\Contracts\Auth\CanResetPassword
+     * @return \Illuminate\Contracts\Auth\CanResetPassword|string
      */
     protected function validateReset(array $credentials)
     {
@@ -179,7 +179,7 @@ class PasswordBroker implements PasswordBrokerContract
      * Get the user for the given credentials.
      *
      * @param  array  $credentials
-     * @return \Illuminate\Contracts\Auth\CanResetPassword
+     * @return \Illuminate\Contracts\Auth\CanResetPassword|null
      *
      * @throws \UnexpectedValueException
      */
@@ -199,7 +199,7 @@ class PasswordBroker implements PasswordBrokerContract
     /**
      * Create a new password reset token for the given user.
      *
-     * @param  CanResetPasswordContract $user
+     * @param  \Illuminate\Contracts\Auth\CanResetPassword $user
      * @return string
      */
     public function createToken(CanResetPasswordContract $user)
@@ -208,20 +208,20 @@ class PasswordBroker implements PasswordBrokerContract
     }
 
     /**
-     * Delete the given password reset token.
+     * Delete password reset tokens of the given user.
      *
-     * @param  string  $token
+     * @param  \Illuminate\Contracts\Auth\CanResetPassword $user
      * @return void
      */
-    public function deleteToken($token)
+    public function deleteToken(CanResetPasswordContract $user)
     {
-        $this->tokens->delete($token);
+        $this->tokens->delete($user);
     }
 
     /**
      * Validate the given password reset token.
      *
-     * @param  CanResetPasswordContract $user
+     * @param  \Illuminate\Contracts\Auth\CanResetPassword $user
      * @param  string $token
      * @return bool
      */

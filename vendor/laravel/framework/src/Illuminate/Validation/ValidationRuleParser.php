@@ -2,8 +2,12 @@
 
 namespace Illuminate\Validation;
 
+use Closure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Exists;
+use Illuminate\Validation\Rules\Unique;
+use Illuminate\Contracts\Validation\Rule as RuleContract;
 
 class ValidationRuleParser
 {
@@ -36,7 +40,7 @@ class ValidationRuleParser
      * Parse the human-friendly rules into a full rules array for the validator.
      *
      * @param  array  $rules
-     * @return \StdClass
+     * @return \stdClass
      */
     public function explode($rules)
     {
@@ -82,10 +86,32 @@ class ValidationRuleParser
         if (is_string($rule)) {
             return explode('|', $rule);
         } elseif (is_object($rule)) {
-            return [$rule];
-        } else {
+            return [$this->prepareRule($rule)];
+        }
+
+        return array_map([$this, 'prepareRule'], $rule);
+    }
+
+    /**
+     * Prepare the given rule for the Validator.
+     *
+     * @param  mixed  $rule
+     * @return mixed
+     */
+    protected function prepareRule($rule)
+    {
+        if ($rule instanceof Closure) {
+            $rule = new ClosureValidationRule($rule);
+        }
+
+        if (! is_object($rule) ||
+            $rule instanceof RuleContract ||
+            ($rule instanceof Exists && $rule->queryCallbacks()) ||
+            ($rule instanceof Unique && $rule->queryCallbacks())) {
             return $rule;
         }
+
+        return (string) $rule;
     }
 
     /**
@@ -165,6 +191,10 @@ class ValidationRuleParser
      */
     public static function parse($rules)
     {
+        if ($rules instanceof RuleContract) {
+            return [$rules, []];
+        }
+
         if (is_array($rules)) {
             $rules = static::parseArrayRule($rules);
         } else {

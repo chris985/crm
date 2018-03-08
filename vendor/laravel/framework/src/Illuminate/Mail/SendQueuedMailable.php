@@ -15,6 +15,20 @@ class SendQueuedMailable
     public $mailable;
 
     /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries;
+
+    /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout;
+
+    /**
      * Create a new job instance.
      *
      * @param  \Illuminate\Contracts\Mail\Mailable  $mailable
@@ -23,6 +37,8 @@ class SendQueuedMailable
     public function __construct(MailableContract $mailable)
     {
         $this->mailable = $mailable;
+        $this->tries = property_exists($mailable, 'tries') ? $mailable->tries : null;
+        $this->timeout = property_exists($mailable, 'timeout') ? $mailable->timeout : null;
     }
 
     /**
@@ -33,7 +49,7 @@ class SendQueuedMailable
      */
     public function handle(MailerContract $mailer)
     {
-        $mailer->send($this->mailable);
+        $this->mailable->send($mailer);
     }
 
     /**
@@ -44,5 +60,28 @@ class SendQueuedMailable
     public function displayName()
     {
         return get_class($this->mailable);
+    }
+
+    /**
+     * Call the failed method on the mailable instance.
+     *
+     * @param  \Exception  $e
+     * @return void
+     */
+    public function failed($e)
+    {
+        if (method_exists($this->mailable, 'failed')) {
+            $this->mailable->failed($e);
+        }
+    }
+
+    /**
+     * Prepare the instance for cloning.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->mailable = clone $this->mailable;
     }
 }

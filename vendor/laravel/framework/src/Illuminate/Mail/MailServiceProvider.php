@@ -5,6 +5,7 @@ namespace Illuminate\Mail;
 use Swift_Mailer;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Swift_DependencyContainer;
 use Illuminate\Support\ServiceProvider;
 
 class MailServiceProvider extends ServiceProvider
@@ -92,6 +93,12 @@ class MailServiceProvider extends ServiceProvider
         // mailer instance, passing in the transport instances, which allows us to
         // override this transporter instances during app start-up if necessary.
         $this->app->singleton('swift.mailer', function ($app) {
+            if ($domain = $app->make('config')->get('mail.domain')) {
+                Swift_DependencyContainer::getInstance()
+                                ->register('mime.idgenerator.idright')
+                                ->asValue($domain);
+            }
+
             return new Swift_Mailer($app['swift.transport']->driver());
         });
     }
@@ -117,14 +124,16 @@ class MailServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/resources/views' => resource_path('views/vendor/mail'),
+                __DIR__.'/resources/views' => $this->app->resourcePath('views/vendor/mail'),
             ], 'laravel-mail');
         }
 
-        $this->app->singleton(Markdown::class, function () {
-            return new Markdown($this->app->make('view'), [
-                'theme' => config('mail.markdown.theme', 'default'),
-                'paths' => config('mail.markdown.paths', []),
+        $this->app->singleton(Markdown::class, function ($app) {
+            $config = $app->make('config');
+
+            return new Markdown($app->make('view'), [
+                'theme' => $config->get('mail.markdown.theme', 'default'),
+                'paths' => $config->get('mail.markdown.paths', []),
             ]);
         });
     }

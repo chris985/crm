@@ -2,7 +2,6 @@
 
 namespace Illuminate\Queue\Jobs;
 
-use Illuminate\Support\Arr;
 use Illuminate\Queue\RedisQueue;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Queue\Job as JobContract;
@@ -52,7 +51,7 @@ class RedisJob extends Job implements JobContract
     {
         // The $job variable is the original job JSON as it existed in the ready queue while
         // the $reserved variable is the raw JSON in the reserved queue. The exact format
-        // of the reserved job is requird in order for us to properly delete its value.
+        // of the reserved job is required in order for us to properly delete its data.
         $this->job = $job;
         $this->redis = $redis;
         $this->queue = $queue;
@@ -105,7 +104,7 @@ class RedisJob extends Job implements JobContract
      */
     public function attempts()
     {
-        return Arr::get($this->decoded, 'attempts') + 1;
+        return ($this->decoded['attempts'] ?? null) + 1;
     }
 
     /**
@@ -115,7 +114,7 @@ class RedisJob extends Job implements JobContract
      */
     public function getJobId()
     {
-        return Arr::get($this->decoded, 'id');
+        return $this->decoded['id'] ?? null;
     }
 
     /**

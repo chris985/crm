@@ -2,8 +2,8 @@
 
 namespace Illuminate\Queue\Connectors;
 
+use Pheanstalk\Connection;
 use Pheanstalk\Pheanstalk;
-use Illuminate\Support\Arr;
 use Pheanstalk\PheanstalkInterface;
 use Illuminate\Queue\BeanstalkdQueue;
 
@@ -17,7 +17,7 @@ class BeanstalkdConnector implements ConnectorInterface
      */
     public function connect(array $config)
     {
-        $retryAfter = Arr::get($config, 'retry_after', Pheanstalk::DEFAULT_TTR);
+        $retryAfter = $config['retry_after'] ?? Pheanstalk::DEFAULT_TTR;
 
         return new BeanstalkdQueue($this->pheanstalk($config), $config['queue'], $retryAfter);
     }
@@ -30,8 +30,11 @@ class BeanstalkdConnector implements ConnectorInterface
      */
     protected function pheanstalk(array $config)
     {
-        $port = Arr::get($config, 'port', PheanstalkInterface::DEFAULT_PORT);
-
-        return new Pheanstalk($config['host'], $port);
+        return new Pheanstalk(
+            $config['host'],
+            $config['port'] ?? PheanstalkInterface::DEFAULT_PORT,
+            $config['timeout'] ?? Connection::DEFAULT_CONNECT_TIMEOUT,
+            $config['persistent'] ?? false
+        );
     }
 }

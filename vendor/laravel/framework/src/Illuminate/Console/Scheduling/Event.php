@@ -3,25 +3,17 @@
 namespace Illuminate\Console\Scheduling;
 
 use Closure;
-use Carbon\Carbon;
 use Cron\CronExpression;
+use Illuminate\Support\Carbon;
 use GuzzleHttp\Client as HttpClient;
 use Illuminate\Contracts\Mail\Mailer;
 use Symfony\Component\Process\Process;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Contracts\Cache\Repository as Cache;
 
 class Event
 {
     use Macroable, ManagesFrequencies;
-
-    /**
-     * The cache store implementation.
-     *
-     * @var \Illuminate\Contracts\Cache\Repository
-     */
-    protected $cache;
 
     /**
      * The command string.
@@ -35,7 +27,7 @@ class Event
      *
      * @var string
      */
-    public $expression = '* * * * * *';
+    public $expression = '* * * * *';
 
     /**
      * The timezone the date should be evaluated on.
@@ -71,6 +63,20 @@ class Event
      * @var bool
      */
     public $withoutOverlapping = false;
+
+    /**
+     * Indicates if the command should only be allowed to run on one server for each cron expression.
+     *
+     * @var bool
+     */
+    public $onOneServer = false;
+
+    /**
+     * The amount of time the mutex should be valid.
+     *
+     * @var int
+     */
+    public $expiresAt = 1440;
 
     /**
      * Indicates if the command should run in background.
@@ -129,15 +135,22 @@ class Event
     public $description;
 
     /**
+     * The event mutex implementation.
+     *
+     * @var \Illuminate\Console\Scheduling\EventMutex
+     */
+    public $mutex;
+
+    /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Contracts\Cache\Repository  $cache
+     * @param  \Illuminate\Console\Scheduling\Mutex  $mutex
      * @param  string  $command
      * @return void
      */
-    public function __construct(Cache $cache, $command)
+    public function __construct(EventMutex $mutex, $command)
     {
-        $this->cache = $cache;
+        $this->mutex = $mutex;
         $this->command = $command;
         $this->output = $this->getDefaultOutput();
     }
@@ -160,8 +173,9 @@ class Event
      */
     public function run(Container $container)
     {
-        if ($this->withoutOverlapping) {
-            $this->cache->put($this->mutexName(), true, 1440);
+        if ($this->withoutOverlapping &&
+            ! $this->mutex->create($this)) {
+            return;
         }
 
         $this->runInBackground
@@ -363,7 +377,7 @@ class Event
     {
         $this->ensureOutputIsBeingCapturedForEmail();
 
-        $addresses = is_array($addresses) ? $addresses : func_get_args();
+        $addresses = is_array($addresses) ? $addresses : [$addresses];
 
         return $this->then(function (Mailer $mailer) use ($addresses, $onlyIfOutputExists) {
             $this->emailOutput($mailer, $addresses, $onlyIfOutputExists);
@@ -405,7 +419,7 @@ class Event
      */
     protected function emailOutput(Mailer $mailer, $addresses, $onlyIfOutputExists = false)
     {
-        $text = file_get_contents($this->output);
+        $text = file_exists($this->output) ? file_get_contents($this->output) : '';
 
         if ($onlyIfOutputExists && empty($text)) {
             return;
@@ -427,7 +441,7 @@ class Event
             return $this->description;
         }
 
-        return 'Scheduled Job Output';
+        return "Scheduled Job Output For [{$this->command}]";
     }
 
     /**
@@ -509,28 +523,30 @@ class Event
     /**
      * Do not allow the event to overlap each other.
      *
+     * @param  int  $expiresAt
      * @return $this
      */
-    public function withoutOverlapping()
+    public function withoutOverlapping($expiresAt = 1440)
     {
         $this->withoutOverlapping = true;
 
+        $this->expiresAt = $expiresAt;
+
         return $this->then(function () {
-            $this->cache->forget($this->mutexName());
+            $this->mutex->forget($this);
         })->skip(function () {
-            return $this->cache->has($this->mutexName());
+            return $this->mutex->exists($this);
         });
     }
 
     /**
-     * Register a callback to further filter the schedule.
+     * Allow the event to only run on one server for each cron expression.
      *
-     * @param  \Closure  $callback
      * @return $this
      */
-    public function when(Closure $callback)
+    public function onOneServer()
     {
-        $this->filters[] = $callback;
+        $this->onOneServer = true;
 
         return $this;
     }
@@ -538,12 +554,29 @@ class Event
     /**
      * Register a callback to further filter the schedule.
      *
-     * @param  \Closure  $callback
+     * @param  \Closure|bool  $callback
      * @return $this
      */
-    public function skip(Closure $callback)
+    public function when($callback)
     {
-        $this->rejects[] = $callback;
+        $this->filters[] = is_callable($callback) ? $callback : function () use ($callback) {
+            return $callback;
+        };
+
+        return $this;
+    }
+
+    /**
+     * Register a callback to further filter the schedule.
+     *
+     * @param  \Closure|bool  $callback
+     * @return $this
+     */
+    public function skip($callback)
+    {
+        $this->rejects[] = is_callable($callback) ? $callback : function () use ($callback) {
+            return $callback;
+        };
 
         return $this;
     }
@@ -624,6 +657,21 @@ class Event
     }
 
     /**
+     * Determine the next due date for an event.
+     *
+     * @param  \DateTime|string  $currentTime
+     * @param  int  $nth
+     * @param  bool  $allowCurrentDate
+     * @return \Illuminate\Support\Carbon
+     */
+    public function nextRunDate($currentTime = 'now', $nth = 0, $allowCurrentDate = false)
+    {
+        return Carbon::instance(CronExpression::factory(
+            $this->getExpression()
+        )->getNextRunDate($currentTime, $nth, $allowCurrentDate));
+    }
+
+    /**
      * Get the Cron expression for the event.
      *
      * @return string
@@ -631,5 +679,18 @@ class Event
     public function getExpression()
     {
         return $this->expression;
+    }
+
+    /**
+     * Set the event mutex implementation to be used.
+     *
+     * @param  \Illuminate\Console\Scheduling\EventMutex  $mutex
+     * @return $this
+     */
+    public function preventOverlapsUsing(EventMutex $mutex)
+    {
+        $this->mutex = $mutex;
+
+        return $this;
     }
 }

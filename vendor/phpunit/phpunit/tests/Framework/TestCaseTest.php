@@ -8,83 +8,95 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'NoArgTestCaseTest.php';
-require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'Singleton.php';
-require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'Mockable.php';
+namespace PHPUnit\Framework;
 
-$GLOBALS['a']  = 'a';
-$_ENV['b']     = 'b';
-$_POST['c']    = 'c';
-$_GET['d']     = 'd';
-$_COOKIE['e']  = 'e';
-$_SERVER['f']  = 'f';
-$_FILES['g']   = 'g';
-$_REQUEST['h'] = 'h';
-$GLOBALS['i']  = 'i';
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Runner\BaseTestRunner;
 
-/**
- * @since      Class available since Release 2.0.0
- * @covers     PHPUnit_Framework_TestCase
- */
-class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
+class TestCaseTest extends TestCase
 {
     protected $backupGlobalsBlacklist = ['i', 'singleton'];
 
-    /**
-     * Used be testStaticAttributesBackupPre
-     */
-    protected static $_testStatic = 0;
+    protected static $testStatic = 0;
 
-    public function testCaseToString()
+    public static function setUpBeforeClass(): void
+    {
+        $GLOBALS['a']  = 'a';
+        $_ENV['b']     = 'b';
+        $_POST['c']    = 'c';
+        $_GET['d']     = 'd';
+        $_COOKIE['e']  = 'e';
+        $_SERVER['f']  = 'f';
+        $_FILES['g']   = 'g';
+        $_REQUEST['h'] = 'h';
+        $GLOBALS['i']  = 'i';
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        unset(
+            $GLOBALS['a'],
+            $_ENV['b'],
+            $_POST['c'],
+            $_GET['d'],
+            $_COOKIE['e'],
+            $_SERVER['f'],
+            $_FILES['g'],
+            $_REQUEST['h'],
+            $GLOBALS['i']
+        );
+    }
+
+    public function testCaseToString(): void
     {
         $this->assertEquals(
-            'Framework_TestCaseTest::testCaseToString',
+            'PHPUnit\Framework\TestCaseTest::testCaseToString',
             $this->toString()
         );
     }
 
-    public function testSuccess()
+    public function testSuccess(): void
     {
-        $test   = new Success;
+        $test   = new \Success;
         $result = $test->run();
 
-        $this->assertEquals(PHPUnit_Runner_BaseTestRunner::STATUS_PASSED, $test->getStatus());
+        $this->assertEquals(BaseTestRunner::STATUS_PASSED, $test->getStatus());
         $this->assertEquals(0, $result->errorCount());
         $this->assertEquals(0, $result->failureCount());
         $this->assertEquals(0, $result->skippedCount());
         $this->assertCount(1, $result);
     }
 
-    public function testFailure()
+    public function testFailure(): void
     {
-        $test   = new Failure;
+        $test   = new \Failure;
         $result = $test->run();
 
-        $this->assertEquals(PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE, $test->getStatus());
+        $this->assertEquals(BaseTestRunner::STATUS_FAILURE, $test->getStatus());
         $this->assertEquals(0, $result->errorCount());
         $this->assertEquals(1, $result->failureCount());
         $this->assertEquals(0, $result->skippedCount());
         $this->assertCount(1, $result);
     }
 
-    public function testError()
+    public function testError(): void
     {
-        $test   = new TestError;
+        $test   = new \TestError;
         $result = $test->run();
 
-        $this->assertEquals(PHPUnit_Runner_BaseTestRunner::STATUS_ERROR, $test->getStatus());
+        $this->assertEquals(BaseTestRunner::STATUS_ERROR, $test->getStatus());
         $this->assertEquals(1, $result->errorCount());
         $this->assertEquals(0, $result->failureCount());
         $this->assertEquals(0, $result->skippedCount());
         $this->assertCount(1, $result);
     }
 
-    public function testSkipped()
+    public function testSkipped(): void
     {
-        $test   = new TestSkipped();
+        $test   = new \TestSkipped;
         $result = $test->run();
 
-        $this->assertEquals(PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED, $test->getStatus());
+        $this->assertEquals(BaseTestRunner::STATUS_SKIPPED, $test->getStatus());
         $this->assertEquals('Skipped test', $test->getStatusMessage());
         $this->assertEquals(0, $result->errorCount());
         $this->assertEquals(0, $result->failureCount());
@@ -92,12 +104,12 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertCount(1, $result);
     }
 
-    public function testIncomplete()
+    public function testIncomplete(): void
     {
-        $test   = new TestIncomplete();
+        $test   = new \TestIncomplete;
         $result = $test->run();
 
-        $this->assertEquals(PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE, $test->getStatus());
+        $this->assertEquals(BaseTestRunner::STATUS_INCOMPLETE, $test->getStatus());
         $this->assertEquals('Incomplete test', $test->getStatusMessage());
         $this->assertEquals(0, $result->errorCount());
         $this->assertEquals(0, $result->failureCount());
@@ -105,10 +117,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertCount(1, $result);
     }
 
-    public function testExceptionInSetUp()
+    public function testExceptionInSetUp(): void
     {
-        $test   = new ExceptionInSetUpTest('testSomething');
-        $result = $test->run();
+        $test   = new \ExceptionInSetUpTest('testSomething');
+        $test->run();
 
         $this->assertTrue($test->setUp);
         $this->assertFalse($test->assertPreConditions);
@@ -117,10 +129,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($test->tearDown);
     }
 
-    public function testExceptionInAssertPreConditions()
+    public function testExceptionInAssertPreConditions(): void
     {
-        $test   = new ExceptionInAssertPreConditionsTest('testSomething');
-        $result = $test->run();
+        $test   = new \ExceptionInAssertPreConditionsTest('testSomething');
+        $test->run();
 
         $this->assertTrue($test->setUp);
         $this->assertTrue($test->assertPreConditions);
@@ -129,10 +141,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($test->tearDown);
     }
 
-    public function testExceptionInTest()
+    public function testExceptionInTest(): void
     {
-        $test   = new ExceptionInTest('testSomething');
-        $result = $test->run();
+        $test   = new \ExceptionInTest('testSomething');
+        $test->run();
 
         $this->assertTrue($test->setUp);
         $this->assertTrue($test->assertPreConditions);
@@ -141,10 +153,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($test->tearDown);
     }
 
-    public function testExceptionInAssertPostConditions()
+    public function testExceptionInAssertPostConditions(): void
     {
-        $test   = new ExceptionInAssertPostConditionsTest('testSomething');
-        $result = $test->run();
+        $test   = new \ExceptionInAssertPostConditionsTest('testSomething');
+        $test->run();
 
         $this->assertTrue($test->setUp);
         $this->assertTrue($test->assertPreConditions);
@@ -153,22 +165,23 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($test->tearDown);
     }
 
-    public function testExceptionInTearDown()
+    public function testExceptionInTearDown(): void
     {
-        $test   = new ExceptionInTearDownTest('testSomething');
-        $result = $test->run();
+        $test   = new \ExceptionInTearDownTest('testSomething');
+        $test->run();
 
         $this->assertTrue($test->setUp);
         $this->assertTrue($test->assertPreConditions);
         $this->assertTrue($test->testSomething);
         $this->assertTrue($test->assertPostConditions);
         $this->assertTrue($test->tearDown);
+        $this->assertEquals(BaseTestRunner::STATUS_ERROR, $test->getStatus());
     }
 
-    public function testNoArgTestCasePasses()
+    public function testNoArgTestCasePasses(): void
     {
-        $result = new PHPUnit_Framework_TestResult;
-        $t      = new PHPUnit_Framework_TestSuite('NoArgTestCaseTest');
+        $result = new TestResult;
+        $t      = new TestSuite(\NoArgTestCaseTest::class);
 
         $t->run($result);
 
@@ -177,18 +190,18 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $result->errorCount());
     }
 
-    public function testWasRun()
+    public function testWasRun(): void
     {
-        $test = new WasRun;
+        $test = new \WasRun;
         $test->run();
 
         $this->assertTrue($test->wasRun);
     }
 
-    public function testException()
+    public function testException(): void
     {
-        $test = new ThrowExceptionTestCase('test');
-        $test->expectException(RuntimeException::class);
+        $test = new \ThrowExceptionTestCase('test');
+        $test->expectException(\RuntimeException::class);
 
         $result = $test->run();
 
@@ -196,10 +209,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result->wasSuccessful());
     }
 
-    public function testExceptionWithEmptyMessage()
+    public function testExceptionWithEmptyMessage(): void
     {
-        $test = new ThrowExceptionTestCase('test');
-        $test->expectException(RuntimeException::class, '');
+        $test = new \ThrowExceptionTestCase('test');
+        $test->expectException(\RuntimeException::class);
 
         $result = $test->run();
 
@@ -207,10 +220,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result->wasSuccessful());
     }
 
-    public function testExceptionWithNullMessage()
+    public function testExceptionWithNullMessage(): void
     {
-        $test = new ThrowExceptionTestCase('test');
-        $test->expectException(RuntimeException::class, null);
+        $test = new \ThrowExceptionTestCase('test');
+        $test->expectException(\RuntimeException::class);
 
         $result = $test->run();
 
@@ -218,10 +231,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result->wasSuccessful());
     }
 
-    public function testExceptionWithMessage()
+    public function testExceptionWithMessage(): void
     {
-        $test = new ThrowExceptionTestCase('test');
-        $test->expectException(RuntimeException::class);
+        $test = new \ThrowExceptionTestCase('test');
+        $test->expectException(\RuntimeException::class);
         $test->expectExceptionMessage('A runtime error occurred');
 
         $result = $test->run();
@@ -230,10 +243,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result->wasSuccessful());
     }
 
-    public function testExceptionWithWrongMessage()
+    public function testExceptionWithWrongMessage(): void
     {
-        $test = new ThrowExceptionTestCase('test');
-        $test->expectException(RuntimeException::class);
+        $test = new \ThrowExceptionTestCase('test');
+        $test->expectException(\RuntimeException::class);
         $test->expectExceptionMessage('A logic error occurred');
 
         $result = $test->run();
@@ -246,10 +259,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testExceptionWithRegexpMessage()
+    public function testExceptionWithRegexpMessage(): void
     {
-        $test = new ThrowExceptionTestCase('test');
-        $test->expectException(RuntimeException::class);
+        $test = new \ThrowExceptionTestCase('test');
+        $test->expectException(\RuntimeException::class);
         $test->expectExceptionMessageRegExp('/runtime .*? occurred/');
 
         $result = $test->run();
@@ -258,10 +271,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result->wasSuccessful());
     }
 
-    public function testExceptionWithWrongRegexpMessage()
+    public function testExceptionWithWrongRegexpMessage(): void
     {
-        $test = new ThrowExceptionTestCase('test');
-        $test->expectException(RuntimeException::class);
+        $test = new \ThrowExceptionTestCase('test');
+        $test->expectException(\RuntimeException::class);
         $test->expectExceptionMessageRegExp('/logic .*? occurred/');
 
         $result = $test->run();
@@ -274,13 +287,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @covers PHPUnit_Framework_Constraint_ExceptionMessageRegExp
-     */
-    public function testExceptionWithInvalidRegexpMessage()
+    public function testExceptionWithInvalidRegexpMessage(): void
     {
-        $test = new ThrowExceptionTestCase('test');
-        $test->expectException(RuntimeException::class);
+        $test = new \ThrowExceptionTestCase('test');
+        $test->expectException(\RuntimeException::class);
         $test->expectExceptionMessageRegExp('#runtime .*? occurred/');
 
         $test->run();
@@ -291,10 +301,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testNoException()
+    public function testNoException(): void
     {
-        $test = new ThrowNoExceptionTestCase('test');
-        $test->expectException(RuntimeException::class);
+        $test = new \ThrowNoExceptionTestCase('test');
+        $test->expectException(\RuntimeException::class);
 
         $result = $test->run();
 
@@ -302,10 +312,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertCount(1, $result);
     }
 
-    public function testWrongException()
+    public function testWrongException(): void
     {
-        $test = new ThrowExceptionTestCase('test');
-        $test->expectException(InvalidArgumentException::class);
+        $test = new \ThrowExceptionTestCase('test');
+        $test->expectException(\InvalidArgumentException::class);
 
         $result = $test->run();
 
@@ -316,7 +326,7 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
     /**
      * @backupGlobals enabled
      */
-    public function testGlobalsBackupPre()
+    public function testGlobalsBackupPre(): void
     {
         global $a;
         global $i;
@@ -358,7 +368,7 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('ii', $GLOBALS['i']);
     }
 
-    public function testGlobalsBackupPost()
+    public function testGlobalsBackupPost(): void
     {
         global $a;
         global $i;
@@ -381,34 +391,36 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
     /**
      * @backupGlobals enabled
      * @backupStaticAttributes enabled
+     *
+     * @doesNotPerformAssertions
      */
-    public function testStaticAttributesBackupPre()
+    public function testStaticAttributesBackupPre(): void
     {
-        $GLOBALS['singleton'] = Singleton::getInstance();
-        self::$_testStatic    = 123;
+        $GLOBALS['singleton'] = \Singleton::getInstance();
+        self::$testStatic     = 123;
     }
 
     /**
      * @depends testStaticAttributesBackupPre
      */
-    public function testStaticAttributesBackupPost()
+    public function testStaticAttributesBackupPost(): void
     {
-        $this->assertNotSame($GLOBALS['singleton'], Singleton::getInstance());
-        $this->assertSame(0, self::$_testStatic);
+        $this->assertNotSame($GLOBALS['singleton'], \Singleton::getInstance());
+        $this->assertSame(0, self::$testStatic);
     }
 
-    public function testIsInIsolationReturnsFalse()
+    public function testIsInIsolationReturnsFalse(): void
     {
-        $test   = new IsolationTest('testIsInIsolationReturnsFalse');
+        $test   = new \IsolationTest('testIsInIsolationReturnsFalse');
         $result = $test->run();
 
         $this->assertCount(1, $result);
         $this->assertTrue($result->wasSuccessful());
     }
 
-    public function testIsInIsolationReturnsTrue()
+    public function testIsInIsolationReturnsTrue(): void
     {
-        $test   = new IsolationTest('testIsInIsolationReturnsTrue');
+        $test   = new \IsolationTest('testIsInIsolationReturnsTrue');
         $test->setRunTestInSeparateProcess(true);
         $result = $test->run();
 
@@ -416,45 +428,45 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result->wasSuccessful());
     }
 
-    public function testExpectOutputStringFooActualFoo()
+    public function testExpectOutputStringFooActualFoo(): void
     {
-        $test   = new OutputTestCase('testExpectOutputStringFooActualFoo');
+        $test   = new \OutputTestCase('testExpectOutputStringFooActualFoo');
         $result = $test->run();
 
         $this->assertCount(1, $result);
         $this->assertTrue($result->wasSuccessful());
     }
 
-    public function testExpectOutputStringFooActualBar()
+    public function testExpectOutputStringFooActualBar(): void
     {
-        $test   = new OutputTestCase('testExpectOutputStringFooActualBar');
+        $test   = new \OutputTestCase('testExpectOutputStringFooActualBar');
         $result = $test->run();
 
         $this->assertCount(1, $result);
         $this->assertFalse($result->wasSuccessful());
     }
 
-    public function testExpectOutputRegexFooActualFoo()
+    public function testExpectOutputRegexFooActualFoo(): void
     {
-        $test   = new OutputTestCase('testExpectOutputRegexFooActualFoo');
+        $test   = new \OutputTestCase('testExpectOutputRegexFooActualFoo');
         $result = $test->run();
 
         $this->assertCount(1, $result);
         $this->assertTrue($result->wasSuccessful());
     }
 
-    public function testExpectOutputRegexFooActualBar()
+    public function testExpectOutputRegexFooActualBar(): void
     {
-        $test   = new OutputTestCase('testExpectOutputRegexFooActualBar');
+        $test   = new \OutputTestCase('testExpectOutputRegexFooActualBar');
         $result = $test->run();
 
         $this->assertCount(1, $result);
         $this->assertFalse($result->wasSuccessful());
     }
 
-    public function testSkipsIfRequiresHigherVersionOfPHPUnit()
+    public function testSkipsIfRequiresHigherVersionOfPHPUnit(): void
     {
-        $test   = new RequirementsTest('testAlwaysSkip');
+        $test   = new \RequirementsTest('testAlwaysSkip');
         $result = $test->run();
 
         $this->assertEquals(1, $result->skippedCount());
@@ -464,9 +476,9 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testSkipsIfRequiresHigherVersionOfPHP()
+    public function testSkipsIfRequiresHigherVersionOfPHP(): void
     {
-        $test   = new RequirementsTest('testAlwaysSkip2');
+        $test   = new \RequirementsTest('testAlwaysSkip2');
         $result = $test->run();
 
         $this->assertEquals(1, $result->skippedCount());
@@ -476,9 +488,9 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testSkipsIfRequiresNonExistingOs()
+    public function testSkipsIfRequiresNonExistingOs(): void
     {
-        $test   = new RequirementsTest('testAlwaysSkip3');
+        $test   = new \RequirementsTest('testAlwaysSkip3');
         $result = $test->run();
 
         $this->assertEquals(1, $result->skippedCount());
@@ -488,9 +500,21 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testSkipsIfRequiresNonExistingFunction()
+    public function testSkipsIfRequiresNonExistingOsFamily(): void
     {
-        $test   = new RequirementsTest('testNine');
+        $test   = new \RequirementsTest('testAlwaysSkip4');
+        $result = $test->run();
+
+        $this->assertEquals(1, $result->skippedCount());
+        $this->assertEquals(
+            'Operating system DOESNOTEXIST is required.',
+            $test->getStatusMessage()
+        );
+    }
+
+    public function testSkipsIfRequiresNonExistingFunction(): void
+    {
+        $test   = new \RequirementsTest('testNine');
         $result = $test->run();
 
         $this->assertEquals(1, $result->skippedCount());
@@ -500,10 +524,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testSkipsIfRequiresNonExistingExtension()
+    public function testSkipsIfRequiresNonExistingExtension(): void
     {
-        $test   = new RequirementsTest('testTen');
-        $result = $test->run();
+        $test   = new \RequirementsTest('testTen');
+        $test->run();
 
         $this->assertEquals(
             'Extension testExt is required.',
@@ -511,10 +535,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testSkipsIfRequiresExtensionWithAMinimumVersion()
+    public function testSkipsIfRequiresExtensionWithAMinimumVersion(): void
     {
-        $test   = new RequirementsTest('testSpecificExtensionVersion');
-        $result = $test->run();
+        $test   = new \RequirementsTest('testSpecificExtensionVersion');
+        $test->run();
 
         $this->assertEquals(
             'Extension testExt >= 1.8.0 is required.',
@@ -522,10 +546,10 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testSkipsProvidesMessagesForAllSkippingReasons()
+    public function testSkipsProvidesMessagesForAllSkippingReasons(): void
     {
-        $test   = new RequirementsTest('testAllPossibleRequirements');
-        $result = $test->run();
+        $test   = new \RequirementsTest('testAllPossibleRequirements');
+        $test->run();
 
         $this->assertEquals(
             'PHP >= 99-dev is required.' . PHP_EOL .
@@ -533,6 +557,7 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
             'Operating system matching /DOESNOTEXIST/i is required.' . PHP_EOL .
             'Function testFuncOne is required.' . PHP_EOL .
             'Function testFuncTwo is required.' . PHP_EOL .
+            'Setting "not_a_setting" must be "Off".' . PHP_EOL .
             'Extension testExtOne is required.' . PHP_EOL .
             'Extension testExtTwo is required.' . PHP_EOL .
             'Extension testExtThree >= 2.0 is required.',
@@ -540,111 +565,129 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testRequiringAnExistingMethodDoesNotSkip()
+    public function testRequiringAnExistingMethodDoesNotSkip(): void
     {
-        $test   = new RequirementsTest('testExistingMethod');
+        $test   = new \RequirementsTest('testExistingMethod');
         $result = $test->run();
         $this->assertEquals(0, $result->skippedCount());
     }
 
-    public function testRequiringAnExistingFunctionDoesNotSkip()
+    public function testRequiringAnExistingFunctionDoesNotSkip(): void
     {
-        $test   = new RequirementsTest('testExistingFunction');
+        $test   = new \RequirementsTest('testExistingFunction');
         $result = $test->run();
         $this->assertEquals(0, $result->skippedCount());
     }
 
-    public function testRequiringAnExistingExtensionDoesNotSkip()
+    public function testRequiringAnExistingExtensionDoesNotSkip(): void
     {
-        $test   = new RequirementsTest('testExistingExtension');
+        $test   = new \RequirementsTest('testExistingExtension');
         $result = $test->run();
         $this->assertEquals(0, $result->skippedCount());
     }
 
-    public function testRequiringAnExistingOsDoesNotSkip()
+    public function testRequiringAnExistingOsDoesNotSkip(): void
     {
-        $test   = new RequirementsTest('testExistingOs');
+        $test   = new \RequirementsTest('testExistingOs');
         $result = $test->run();
         $this->assertEquals(0, $result->skippedCount());
     }
 
-    public function testCurrentWorkingDirectoryIsRestored()
+    public function testRequiringASetting(): void
     {
-        $expectedCwd = getcwd();
+        $test   = new \RequirementsTest('testSettingDisplayErrorsOn');
 
-        $test = new ChangeCurrentWorkingDirectoryTest('testSomethingThatChangesTheCwd');
+        // Get this so we can return it to whatever it was before the test.
+        $displayErrorsVal = \ini_get('display_errors');
+
+        \ini_set('display_errors', 'On');
+        $result = $test->run();
+        $this->assertEquals(0, $result->skippedCount());
+
+        \ini_set('display_errors', 'Off');
+        $result = $test->run();
+        $this->assertEquals(1, $result->skippedCount());
+
+        \ini_set('display_errors', $displayErrorsVal);
+    }
+
+    public function testCurrentWorkingDirectoryIsRestored(): void
+    {
+        $expectedCwd = \getcwd();
+
+        $test = new \ChangeCurrentWorkingDirectoryTest('testSomethingThatChangesTheCwd');
         $test->run();
 
-        $this->assertSame($expectedCwd, getcwd());
+        $this->assertSame($expectedCwd, \getcwd());
     }
 
     /**
      * @requires PHP 7
-     * @expectedException TypeError
+     * @expectedException \TypeError
      */
-    public function testTypeErrorCanBeExpected()
+    public function testTypeErrorCanBeExpected(): void
     {
-        $o = new ClassWithScalarTypeDeclarations;
+        $o = new \ClassWithScalarTypeDeclarations;
         $o->foo(null, null);
     }
 
-    public function testCreateMockFromClassName()
+    public function testCreateMockFromClassName(): void
     {
-        $mock = $this->createMock(Mockable::class);
+        $mock = $this->createMock(\Mockable::class);
 
-        $this->assertInstanceOf(Mockable::class, $mock);
-        $this->assertInstanceOf(PHPUnit_Framework_MockObject_MockObject::class, $mock);
+        $this->assertInstanceOf(\Mockable::class, $mock);
+        $this->assertInstanceOf(MockObject::class, $mock);
     }
 
-    public function testCreateMockMocksAllMethods()
+    public function testCreateMockMocksAllMethods(): void
     {
-        /** @var Mockable $mock */
-        $mock = $this->createMock(Mockable::class);
+        /** @var \Mockable $mock */
+        $mock = $this->createMock(\Mockable::class);
 
         $this->assertNull($mock->foo());
         $this->assertNull($mock->bar());
     }
 
-    public function testCreatePartialMockDoesNotMockAllMethods()
+    public function testCreatePartialMockDoesNotMockAllMethods(): void
     {
-        /** @var Mockable $mock */
-        $mock = $this->createPartialMock(Mockable::class, ['foo']);
+        /** @var \Mockable $mock */
+        $mock = $this->createPartialMock(\Mockable::class, ['foo']);
 
         $this->assertNull($mock->foo());
         $this->assertTrue($mock->bar());
     }
 
-    public function testCreatePartialMockCanMockNoMethods()
+    public function testCreatePartialMockCanMockNoMethods(): void
     {
-        /** @var Mockable $mock */
-        $mock = $this->createPartialMock(Mockable::class, []);
+        /** @var \Mockable $mock */
+        $mock = $this->createPartialMock(\Mockable::class, []);
 
         $this->assertTrue($mock->foo());
         $this->assertTrue($mock->bar());
     }
 
-    public function testCreateMockSkipsConstructor()
+    public function testCreateMockSkipsConstructor(): void
     {
-        /** @var Mockable $mock */
-        $mock = $this->createMock(Mockable::class);
+        /** @var \Mockable $mock */
+        $mock = $this->createMock(\Mockable::class);
 
         $this->assertFalse($mock->constructorCalled);
     }
 
-    public function testCreateMockDisablesOriginalClone()
+    public function testCreateMockDisablesOriginalClone(): void
     {
-        /** @var Mockable $mock */
-        $mock = $this->createMock(Mockable::class);
+        /** @var \Mockable $mock */
+        $mock = $this->createMock(\Mockable::class);
 
         $cloned = clone $mock;
         $this->assertFalse($cloned->cloned);
     }
 
-    public function testConfiguredMockCanBeCreated()
+    public function testConfiguredMockCanBeCreated(): void
     {
-        /** @var Mockable $mock */
+        /** @var \Mockable $mock */
         $mock = $this->createConfiguredMock(
-            Mockable::class,
+            \Mockable::class,
             [
                 'foo' => false
             ]
@@ -652,5 +695,45 @@ class Framework_TestCaseTest extends PHPUnit_Framework_TestCase
 
         $this->assertFalse($mock->foo());
         $this->assertNull($mock->bar());
+    }
+
+    public function testProvidingOfAutoreferencedArray(): void
+    {
+        $test = new \TestAutoreferenced('testJsonEncodeException', $this->getAutoreferencedArray());
+        $test->runBare();
+
+        $this->assertInternalType('array', $test->myTestData);
+        $this->assertArrayHasKey('data', $test->myTestData);
+        $this->assertEquals($test->myTestData['data'][0], $test->myTestData['data']);
+    }
+
+    public function testProvidingArrayThatMixesObjectsAndScalars(): void
+    {
+        $data = [
+            [123],
+            ['foo'],
+            [$this->createMock(\Mockable::class)],
+        ];
+
+        $test = new \TestAutoreferenced('testJsonEncodeException', [$data]);
+        $test->runBare();
+
+        $this->assertInternalType('array', $test->myTestData);
+        $this->assertSame($data, $test->myTestData);
+    }
+
+    /**
+     * @return array<string, array>
+     */
+    private function getAutoreferencedArray()
+    {
+        $recursionData   = [];
+        $recursionData[] = &$recursionData;
+
+        return [
+            'RECURSION' => [
+                'data' => $recursionData
+            ]
+        ];
     }
 }

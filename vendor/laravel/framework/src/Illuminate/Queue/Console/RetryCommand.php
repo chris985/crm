@@ -4,16 +4,15 @@ namespace Illuminate\Queue\Console;
 
 use Illuminate\Support\Arr;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputArgument;
 
 class RetryCommand extends Command
 {
     /**
-     * The console command name.
+     * The console command signature.
      *
      * @var string
      */
-    protected $name = 'queue:retry';
+    protected $signature = 'queue:retry {id* : The ID of the failed job or "all" to retry all jobs.}';
 
     /**
      * The console command description.
@@ -27,14 +26,20 @@ class RetryCommand extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         foreach ($this->getJobIds() as $id) {
-            $this->retryJob($id);
+            $job = $this->laravel['queue.failer']->find($id);
 
-            $this->info("The failed job [{$id}] has been pushed back onto the queue!");
+            if (is_null($job)) {
+                $this->error("Unable to find failed job with ID [{$id}].");
+            } else {
+                $this->retryJob($job);
 
-            $this->laravel['queue.failer']->forget($id);
+                $this->info("The failed job [{$id}] has been pushed back onto the queue!");
+
+                $this->laravel['queue.failer']->forget($id);
+            }
         }
     }
 
@@ -45,7 +50,7 @@ class RetryCommand extends Command
      */
     protected function getJobIds()
     {
-        $ids = $this->argument('id');
+        $ids = (array) $this->argument('id');
 
         if (count($ids) === 1 && $ids[0] === 'all') {
             $ids = Arr::pluck($this->laravel['queue.failer']->all(), 'id');
@@ -55,21 +60,15 @@ class RetryCommand extends Command
     }
 
     /**
-     * Retry the queue job with the given ID.
+     * Retry the queue job.
      *
-     * @param  string  $id
+     * @param  \stdClass  $job
      * @return void
      */
-    protected function retryJob($id)
+    protected function retryJob($job)
     {
-        if (is_null($failed = $this->laravel['queue.failer']->find($id))) {
-            return $this->error("No failed job matches the given ID [{$id}].");
-        }
-
-        $failed = (object) $failed;
-
-        $this->laravel['queue']->connection($failed->connection)->pushRaw(
-            $this->resetAttempts($failed->payload), $failed->queue
+        $this->laravel['queue']->connection($job->connection)->pushRaw(
+            $this->resetAttempts($job->payload), $job->queue
         );
     }
 
@@ -90,17 +89,5 @@ class RetryCommand extends Command
         }
 
         return json_encode($payload);
-    }
-
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return [
-            ['id', InputArgument::IS_ARRAY, 'The ID of the failed job'],
-        ];
     }
 }

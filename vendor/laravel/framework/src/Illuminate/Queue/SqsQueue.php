@@ -52,9 +52,14 @@ class SqsQueue extends Queue implements QueueContract
      */
     public function size($queue = null)
     {
-        return (int) $this->sqs->getQueueAttributes([
+        $response = $this->sqs->getQueueAttributes([
             'QueueUrl' => $this->getQueue($queue),
-        ])->get('ApproximateNumberOfMessages');
+            'AttributeNames' => ['ApproximateNumberOfMessages'],
+        ]);
+
+        $attributes = $response->get('Attributes');
+
+        return (int) $attributes['ApproximateNumberOfMessages'];
     }
 
     /**
@@ -88,7 +93,7 @@ class SqsQueue extends Queue implements QueueContract
     /**
      * Push a new job onto the queue after a delay.
      *
-     * @param  \DateTime|int  $delay
+     * @param  \DateTimeInterface|\DateInterval|int  $delay
      * @param  string  $job
      * @param  mixed   $data
      * @param  string  $queue
@@ -116,7 +121,7 @@ class SqsQueue extends Queue implements QueueContract
             'AttributeNames' => ['ApproximateReceiveCount'],
         ]);
 
-        if (count($response['Messages']) > 0) {
+        if (! is_null($response['Messages']) && count($response['Messages']) > 0) {
             return new SqsJob(
                 $this->container, $this->sqs, $response['Messages'][0],
                 $this->connectionName, $queue

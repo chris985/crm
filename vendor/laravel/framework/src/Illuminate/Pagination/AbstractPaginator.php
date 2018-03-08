@@ -3,11 +3,13 @@
 namespace Illuminate\Pagination;
 
 use Closure;
-use ArrayIterator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Contracts\Support\Htmlable;
 
+/**
+ * @mixin \Illuminate\Support\Collection
+ */
 abstract class AbstractPaginator implements Htmlable
 {
     /**
@@ -60,7 +62,7 @@ abstract class AbstractPaginator implements Htmlable
     protected $pageName = 'page';
 
     /**
-     * The current page resolver callback.
+     * The current path resolver callback.
      *
      * @var \Closure
      */
@@ -85,14 +87,14 @@ abstract class AbstractPaginator implements Htmlable
      *
      * @var string
      */
-    public static $defaultView = 'pagination::default';
+    public static $defaultView = 'pagination::bootstrap-4';
 
     /**
      * The default "simple" pagination view.
      *
      * @var string
      */
-    public static $defaultSimpleView = 'pagination::simple-default';
+    public static $defaultSimpleView = 'pagination::simple-bootstrap-4';
 
     /**
      * Determine if the given value is a valid page number.
@@ -446,13 +448,24 @@ abstract class AbstractPaginator implements Htmlable
     }
 
     /**
+     * Indicate that Bootstrap 3 styling should be used for generated links.
+     *
+     * @return void
+     */
+    public static function useBootstrapThree()
+    {
+        static::defaultView('pagination::default');
+        static::defaultSimpleView('pagination::simple-default');
+    }
+
+    /**
      * Get an iterator for the items.
      *
      * @return \ArrayIterator
      */
     public function getIterator()
     {
-        return new ArrayIterator($this->items->all());
+        return $this->items->getIterator();
     }
 
     /**
@@ -463,6 +476,16 @@ abstract class AbstractPaginator implements Htmlable
     public function isEmpty()
     {
         return $this->items->isEmpty();
+    }
+
+    /**
+     * Determine if the list of items is not empty.
+     *
+     * @return bool
+     */
+    public function isNotEmpty()
+    {
+        return $this->items->isNotEmpty();
     }
 
     /**
