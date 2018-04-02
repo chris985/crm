@@ -1,77 +1,110 @@
 @extends('common.app')
 @section('content')
-@if (count($errors) > 0)
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
-	<button class="close" type="button" data-dismiss="alert" aria-label="Close">
-		<span aria-hidden="true"><i class="fa fa-times fa-fw"></i></span>
-	</button>
-	<p><strong>Error!</strong> Please fix the following to continue:</p>
-	<ul>
-		@foreach ($errors->all() as $error)
-		<li>{{ $error }}</li>
-		@endforeach
-	</ul>
+
+<div class="uk-card uk-card-default">
+	<div class="uk-card-header">
+		<div class="uk-grid-small uk-flex-middle" uk-grid>
+			<p class="uk-width-1-2@m">
+				<label class="uk-form-label" for="first"><i class="fa fa-fw fa-user uk-margin-small-right"></i>First</label>
+				<input  class="uk-input" id="first" name="first" type="text" value="{{ $person->first }}">
+			</p>
+			<p class="uk-width-1-2@m">
+				<label class="uk-form-label" for="last"><i class="fa fa-fw fa-diamond uk-margin-small-right"></i>Last</label>
+				<input class="uk-input" id="last" name="last" type="text" value="{{ $person->last }}">
+			</p>
+			<p class="uk-width-1-3@m">
+				<label class="uk-form-label" for="title"><i class="fa fa-fw fa-tag uk-margin-small-right"></i>Title</label>
+				<input id="title" class="uk-input" name="title" type="text" value="{{ $person->title }}">
+			</p>
+			<p class="uk-width-2-3@m">
+				<label class="uk-form-label" for="places"><i class="fa fa-fw fa-building uk-margin-small-right"></i>Places</label>
+				{{ Form::select('places[]', $places, $selected, ['class' => 'uk-input select tags multiple', 'multiple' => true]) }}
+
+			</p>
+		</div>
+	</div>
+	<div class="uk-card-body">
+		<div class="uk-grid-small uk-flex-middle" uk-grid>
+			<p class="uk-width-1-1">DETAILS</p>
+			<p class="uk-width-1-2@m">
+				<label class="uk-form-label" for="phone"><i class="fa fa-fw fa-phone uk-margin-small-right"></i>Phone</label>
+				<input id="phone" class="uk-input" name="phone" type="text" value="{{ $person->phone }}">
+			</p>
+			<p class="uk-width-1-2@m">
+				<label class="uk-form-label" for="alt"><i class="fa fa-fw fa-mobile uk-margin-small-right"></i>Alt</label>
+				<input id="alt" class="uk-input" name="alt" type="text" value="{{ $person->alt }}">
+			</p>
+			<p class="uk-width-1-2@m">
+				<label class="uk-form-label" for="email" ><i class="fa fa-fw fa-envelope uk-margin-small-right"></i>Email</label>
+				<input id="email" class="uk-input" name="email" type="text" value="{{ $person->email }}">
+			</p>
+			<p class="uk-width-1-2@m">
+				<label class="uk-form-label" for="web"><i class="fa fa-fw fa-external-link uk-margin-small-right"></i>Web</label>
+				<input id="web" class="uk-input" name="web" type="text" value="{{ $person->web }}">
+			</p>
+			<p class="uk-width-1-4@m">
+				<label class="uk-form-label" for="facebook"><i class="fa fa-fw fa-facebook uk-margin-small-right"></i>Facebook</label>
+				<input id="facebook" class="uk-input" name="facebook" type="text">
+			</p>
+			<p class="uk-width-1-4@m">
+				<label class="uk-form-label" for="twitter"><i class="fa fa-fw fa-twitter uk-margin-small-right"></i>Twitter</label>
+				<input id="twitter" class="uk-input" name="twitter" type="text">
+			</p>
+			<p class="uk-width-1-4@m">
+				<label class="uk-form-label" for="linkedin"><i class="fa fa-fw fa-linkedin uk-margin-small-right"></i>LinkedIn</label>
+				<input id="linkedin" class="uk-input" name="linkedin" type="text">
+			</p>
+			<p class="uk-width-1-4@m">
+				<label class="uk-form-label" for="google"><i class="fa fa-fw fa-google uk-margin-small-right"></i>Google</label>
+				<input id="google" class="uk-input" name="google" type="text">
+			</p>
+			<p class="uk-width-1-3@m">
+				<label class="uk-form-label" for="prefix"><i class="fa fa-fw fa-venus-mars uk-margin-small-right"></i>Prefix</label>
+				{!! Form::select('prefix', ['' => 'Unspecified', 'mr'=>'Mr.', 'mrs' => 'Mrs.', 'ms' => 'Ms.'], null, ['class' => 'uk-input select tags']) !!}
+			</p>
+			<p class="uk-width-1-3@m">
+				<label class="uk-form-label" for="prefix"><i class="fa fa-fw fa-venus-mars uk-margin-small-right"></i>Suffix</label>
+				{!! Form::select('suffix', ['' => 'Unspecified', 'sr'=>'Sr.', 'ii' => 'II', 'ms' => 'Ms.'], null, ['class' => 'uk-input select tags']) !!}
+			</p>
+			<div class="uk-width-1-3@m">
+				<div>
+					<label class="uk-form-label"><i class="fa fa-fw fa-photo uk-margin-small-right"></i>Photo</label>
+					<div uk-form-custom="target: true">
+						{!! Form::file('image', null, array('id' => 'image', 'class' => 'uk-input custom-file-control',  'placeholder' => 'Select a File...')) !!}
+						<input class="uk-input" type="text" placeholder="Select file" disabled>
+					</div>
+				</div>
+			</div>
+			<p class="uk-width-1-1">ACCOUNT</p>
+			<p class="uk-width-1-3">
+				<label class="uk-form-label" for="account"><i class="fa fa-fw fa-credit-card uk-margin-small-right"></i>Number</label>
+				<input id="phone" class="uk-input" name="account" type="text">
+			</p>
+			<p class="uk-width-1-3">
+				<label class="uk-form-label" for="user"><i class="fa fa-fw fa-user-o uk-margin-small-right"></i>Manager</label>
+				{{ Form::select('user', $person->person_type, $person->type, ['class' => 'uk-input select tags']) }}
+			</p>
+			<p class="uk-width-1-3">
+				<label class="uk-form-label" for="refer"><i class="fa fa-fw fa-handshake-o uk-margin-small-right"></i>Referral</label>
+				{{ Form::select('refer', $person->person_type, $person->type, ['class' => 'uk-input select tags']) }}
+			</p>
+		</div>
+	</div>
+	<div class="uk-card-footer">
+		<a href="#" class="uk-button uk-button-primary">Save</a> <a href="#" class="uk-button uk-button-text uk-margin-left">Cancel</a>
+	</div>
 </div>
-@endif
+
+<!-- -->
+<hr>
 <article class="card">
 	<div class="card-header">
-		<div class="row">
-			<div class="col main">
-				<div class="form-group row">
-					<div class="col-md-6">
-						<label class="text-muted" for="first"><i class="text-muted fa fa-user fa-fw mr-1"></i>First</label>
-						<input id="first" class="form-control" name="first" type="text" value="{{ $person->first }}" aria-describedby="first">
-					</div>
-					<div class="col-md-6">
-						<label class="text-muted" for="last"><i class="text-muted fa fa-diamond fa-fw mr-1"></i>Last</label>
-						<input id="last" class="form-control" name="last" type="text" value="{{ $person->last }}" aria-describedby="last">
-					</div>
-				</div>
-				<div class="form-group row">
-					<div class="col-md-5">
-						<label class="text-muted" for="title"><i class="text-muted fa fa-tag fa-fw mr-1"></i>Title</label>
-						<input id="title" class="form-control" name="title" type="text" value="{{ $person->title }}" aria-describedby="title" >
-					</div>
-					<div class="col-md-7">
-						<label class="text-muted" for="places"><i class="text-muted fa fa-building fa-fw mr-1"></i>Places</label>
-						{{ Form::select('places[]', $places, $selected, ['class' => 'form-control', 'multiple' => true]) }}
-					</div>
-				</div>
-			</div>
-			<div class="col-md-2">
-				<div class="form-group">
-					<label class="text-muted" for="status"><i class="text-muted fa fa-eye fa-fw mr-1"></i>Status</label>
- 					{{ Form::select('status', $person->person_status, $person->status, ['class' => 'form-control']) }}
-				</div>
-				<div class="form-group">
-					<label for="type"><i class="text-muted fa fa-cubes fa-fw mr-1"></i>Type</label>
- 					{{ Form::select('type', $person->person_type, $person->type, ['class' => 'form-control']) }}
-				</div>
-			</div>
-		</div>
+
 	</div>
 	<div class="card-block">
 		<div class="row">
-			<div class="col main">
-				<div class="form-group">
-					<label class="text-muted" for="phone"><i class="text-muted fa fa-phone fa-fw mr-1"></i>Phone</label>
-					<input id="phone" class="form-control" name="phone" type="text" value="{{ $person->phone }}" aria-describedby="phone">
-				</div>
-				<div class="form-group">
-					<label class="text-muted" for="alt"><i class="text-muted fa fa-mobile fa-fw mr-1"></i>Alt</label>
-					<input id="alt" class="form-control" name="alt" type="text" value="{{ $person->alt }}" aria-describedby="alt">
-				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="form-group">
-					<label class="text-muted" for="email"><i class="text-muted fa fa-envelope fa-fw mr-1"></i>Email</label>
-					<input id="email" class="form-control" name="email" type="text" value="{{ $person->email }}" aria-describedby="email">
-				</div>
-				<div class="form-group">
-					<label class="text-muted" for="web"><i class="text-muted fa fa-external-link fa-fw mr-1"></i>Web</label>
-					<input id="web" class="form-control" name="web" type="text" aria-describedby="web" value="{{ $person->web }}">
-				</div>
-			</div>
+		
+		
 		</div>
 		<div class="form-group row">
 			<div class="col">
@@ -113,24 +146,24 @@
 			</div>
 			<div class="col-md-8">
 				<label class="text-muted" for="email"><i class="text-muted fa fa-tags fa-fw mr-1"></i>Tags</label>
-					<select id="type" class="form-control" name="type" multiple="multiple">
-						
-					</select>
+				<select id="type" class="form-control" name="type" multiple="multiple">
+
+				</select>
 			</div>
 		</div>
 	</div>
 	<div class="card-footer text-muted">
-        <div class="row align-items-center">
-            <div class="col-md-4">
-                <small><i class="fa fa-id-card fa-fw mr-1 text-muted"></i>ID#: {{ $person->id }}</small>
-            </div>
-            <div class="col-md-4">
-                <small><i class="fa fa-plus-square fa-fw text-muted"></i>Created: {{ $person->created_at }}</small>
-            </div>
-            <div class="col-md-4">
-                <small><i class="fa fa-pencil-square fa-fw text-muted"></i>Updated: {{ $person->updated_at }}</small>
-            </div>
-        </div>
+		<div class="row align-items-center">
+			<div class="col-md-4">
+				<small><i class="fa fa-id-card fa-fw mr-1 text-muted"></i>ID#: {{ $person->id }}</small>
+			</div>
+			<div class="col-md-4">
+				<small><i class="fa fa-plus-square fa-fw text-muted"></i>Created: {{ $person->created_at }}</small>
+			</div>
+			<div class="col-md-4">
+				<small><i class="fa fa-pencil-square fa-fw text-muted"></i>Updated: {{ $person->updated_at }}</small>
+			</div>
+		</div>
 	</div>
 </article>
 @endsection
@@ -154,6 +187,31 @@ mx-3 card-open
 
 @section('form-close')
 {!! Form::close() !!}
+@endsection
+
+@section('aside')
+<div class="uk-grid-small uk-flex-middle" uk-grid>
+	<p class="uk-width-1-1">
+		<label class="uk-form-label" for="status"><i class="fa fa-fw fa-eye uk-margin-small-right"></i>Status</label>
+		{{ Form::select('status', $person->person_status, $person->status, ['class' => 'uk-input']) }}
+	</p>
+	<p class="uk-width-1-1">
+		<label class="uk-form-label" for="type"><i class="fa fa-fw fa-cubes uk-margin-small-right"></i>Type</label>
+		{{ Form::select('type', $person->person_type, $person->type, ['class' => 'uk-input']) }}
+	</p>
+	<p class="uk-width-1-1">
+		<label class="uk-form-label" for="type"><i class="fa fa-fw fa-sitemap uk-margin-small-right"></i>Category</label>
+		{{ Form::select('type', $person->person_type, $person->type, ['class' => 'uk-input']) }}
+	</p>
+	<p class="uk-width-1-1">
+		<label class="uk-form-label" for="note"><i class="fa fa-fw fa-sticky-note uk-margin-small-right"></i>Notes</label>
+		<textarea class="uk-textarea" id="note" name="note" rows="3"></textarea>
+	</p>
+	<p class="uk-width-1-1">
+		<label class="uk-form-label" for="type"><i class="fa fa-fw fa-tags uk-margin-small-right"></i>Tags</label>
+		{{ Form::select('tags', $person->person_type, $person->type, ['multiple' => 'multiple', 'class' => 'uk-input select multiple']) }}
+	</p>
+</div>
 @endsection
 
 @section('modal')

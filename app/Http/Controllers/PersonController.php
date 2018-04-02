@@ -57,7 +57,7 @@ public function store(Request $request)
     if($request->hasFile('image')){ // If an image is attached
         $image = $request->file('image'); // Get the imae
         $filename = time() . '.' . $image->getClientOriginalExtension(); // Randomize filename
-        Image::make($image)->resize(160, 160)->save( public_path() . '../../storage/app/people/'. $filename ); // Save the file
+        Image::make($image)->resize(160, 160)->save( public_path() . '../../storage/app/public/people/'. $filename ); // Save the file
         $person->image = $filename; // Set the filename in database
     };
     $person->save(); // Save the item
@@ -118,7 +118,7 @@ public function update(Request $request, $id)
     $person->note = $request->note;
     if(isset($request->delete)) { // If delete checkbox is checked
         if(!empty($person->image)) { // And there is an image file to delete
-                $file_path = public_path() . '../../storage/app/people/'. $person->image; // Set path to image
+                $file_path = public_path() . '../../storage/app/public/people/'. $person->image; // Set path to image
                 unlink($file_path); // Delete existing image
                 $person->image = NULL; // Delete db link
             }
@@ -128,14 +128,14 @@ public function update(Request $request, $id)
                 $image = $request->file('image'); // Grab image file
                 $filename = time() . '.' . $image->getClientOriginalExtension(); // Randomize filename
                 //Image::make($image)->resize(160, 160)->save( public_path() . '\\media\\people\\'. $filename ); // Save the file
-                Image::make($image)->resize(160, 160)->save( public_path() . '../../storage/app/people/'. $filename ); // Save the file
+                Image::make($image)->resize(160, 160)->save( public_path() . '../../storage/app/public/people/'. $filename ); // Save the file
                 $person->image = $filename; // Save filename in db
             } else { // If already has an image
                 $file_path = public_path() . '../../storage/app/people/'. $person->image; // Set path to image
                 unlink($file_path); // Delete existing image
                 $image = $request->file('image'); // Set path
                 $filename = time() . '.' . $image->getClientOriginalExtension(); // Randomize filename
-                Image::make($image)->resize(160, 160)->save( public_path() . '../../storage/app/people/'. $filename ); // Save new file
+                Image::make($image)->resize(160, 160)->save( public_path() . '../../storage/app/public/people/'. $filename ); // Save new file
                 $person->image = $filename; // Save new filename in db
             }
         }

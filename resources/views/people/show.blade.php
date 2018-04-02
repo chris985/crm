@@ -1,151 +1,114 @@
 @extends('common.app')
 @section('content')
-@if ($message = Session::get('success'))
-<div class="alert alert-success alert-dismissible fade show mx-3 my-3" role="alert">
-	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-		<span aria-hidden="true"><i class="fa fa-times fa-fw"></i></span>
-	</button>
-	<p><strong>Success!</strong> {{ $message }}.</p>
-</div>
-@endif
+<article class="uk-card uk-card-default">
+	<p class="uk-card-badge uk-label"><i class="fa fa-fw fa-cubes uk-margin-small-right"></i>{{ $person->real_type }}</p>
+	<header class="uk-card-header">
+		<div class="uk-grid-small uk-flex-middle" uk-grid>
+			<div class="uk-width-auto">
+				@if (empty($person->image))
+				<img class="uk-border-circle" width="160" height="160" src="https://randomuser.me/api/portraits/men/{{ $person->id }}.jpg" alt="" />
+				@else
+				<img class="uk-border-circle" width="160" height="160" src="{{ Storage::url('people/' . $person->image) }}" alt="" />
+				@endif
+			</div>
+			<div class="uk-width-expand">
+				<h3 class="uk-card-title uk-margin-remove-bottom">@if (!empty($person->prefix))<span class="uk-text-muted uk-margin-small-right">{{ $person->prefix }}</span>@endif{{ $person->name }}</h3>
+				<p class="uk-text-meta uk-margin-remove-top">
+					@if (!empty($person->title))
+					<i class="fa fa-fw fa-tag uk-margin-small-right"></i>{{ $person->title }}
+					@endif 
+					@if (!$person->places->isEmpty())
+					at <i class="fa fa-building mx-1"></i>
+					@foreach ($person->places as $key => $place)
+					<a class="btn-text mr-1" href="{{ route('places.show', $place->id) }}">{{ $place->name }}</a>
+					@endforeach
+					@endif
+				</p>
+			</div>
+		</div>
+	</header>
+	<div class="uk-card-body uk-grid">
+		<div class="uk-width-1-4">
+			<ul class="uk-tab-left" uk-tab="connect: #switcher"><li><a href="#">Details</a></li><li><a href="#">Account</a></li><li><a href="#">Notes</a></li></ul>
+		</div>
+		<div class="uk-width-expand">
+			<ul id="switcher" class="uk-switcher">
+				<li class="uk-margin-remove-top" uk-grid>
+					<p class="uk-width-1-2"><i class="fa fa-fw fa-2x fa-phone uk-align-left"></i><span class="label uk-article-meta">PHONE</span><br />{{ $person->phone }}<br />{{ $person->alt }}</p>
+					<p class="uk-width-1-2"><i class="fa fa-fw fa-2x fa-envelope uk-align-left"></i><span class="label uk-article-meta">EMAIL</span><br />{{ $person->email }}</p>
+					<p class="uk-width-1-2"><i class="fa fa-fw fa-2x fa-external-link uk-align-left"></i><span class="label uk-article-meta">WEBSITE</span><br /><span class="uk-text-break">{{ $person->web }}</span></p>
+					<p class="uk-width-1-2">
+						<i class="fa fa-fw fa-2x fa-hashtag uk-align-left"></i><span class="label uk-article-meta">SOCIAL</span><br />
+						<span class="fa-stack">
+							<i class="fa fa-circle-thin fa-stack-2x"></i>
+							<i class="fa fa-facebook fa-stack-1x"></i>
+						</span>
+						<span class="fa-stack">
+							<i class="fa fa-circle-thin fa-stack-2x"></i>
+							<i class="fa fa-twitter fa-stack-1x"></i>
+						</span>
 
-<!-- -->
-<article class="card">
-	<div class="card-header">
-		@if (empty($person->image))
-		<img class="float-left rounded-circle mr-3" width="160" height="160" src="https://randomuser.me/api/portraits/men/{{ $person->id }}.jpg" alt="" />
-		@else
-		<img class="float-left rounded-circle mr-3" width="160" height="160" src="/../../storage/app/people/{{ $person->image }}" alt="" />
-		@endif
-		<p class="px-1 py-1 float-right"><span class="badge badge-default">{{ $person->real_status }}</span><span class="ml-3 badge badge-default">{{ $person->real_type }}</span></p>
-		<h1 class="h4 card-title pt-5">
-			@if (!empty($person->prefix))
-			{{ $person->prefix }}
-			@endif
-			{{ $person->name }}
-		</h1>
-		<h6 class="card-subtitle text-muted">
-			@if (!empty($person->title))
-			<i class="fa fa-tag mr-1"></i>{{ $person->title }}
-			@endif
-			@if (!$person->places->isEmpty())
-			at <i class="fa fa-building mx-1"></i>
-			@foreach ($person->places as $key => $place)
-			<a class="btn-text mr-1" href="{{ route('places.show', $place->id) }}">{{ $place->name }}</a>
-			@endforeach
-			@endif
-		</h6>
-	</div>
-	<div class="card-body">
-		<div class="card-block row">
-			@if (!empty($person->phone))
-			<div class="col-md-4">
-				<p class="float-left mr-3"><i class="fa fa-phone fa-2x fa-fw text-muted"></i></p>
-				<p>{{ $person->phone }}<br />{{ $person->alt }}</p>
-			</div>
-			@endif
-			@if (!empty($person->email))
-			<div class="col-md-4 py-1">
-				<p class="float-left mr-3"><i class="fa fa-envelope fa-2x fa-fw text-muted"></i></p>
-				<p>{{ $person->email }}</p>
-			</div>
-			@endif
-			@if (!empty($person->web))
-			<div class="col-md-4 py-1">
-				<p class="float-left mr-3"><i class="fa fa-external-link fa-2x fa-fw text-muted"></i></p>
-				<p>{{ $person->web }}</p>
-			</div>
-			@endif
-			@if (!empty($person->category))
-			<div class="col-md-4 py-1">
-				<p class="float-left mr-3"><i class="fa fa-sitemap fa-2x fa-fw text-muted"></i></p>
-				<p>{{ $person->category }}</p>
-			</div>
-			@endif
-			@if (!empty($person->refer))
-			<div class="col-md-4 py-1">
-				<p class="float-left mr-3"><i class="fa fa-handshake-o fa-2x fa-fw text-muted"></i></p>
-				<p>{{ $person->refer }}</p>
-			</div>
-			@endif
-			@if (!empty($person->account))
-			<div class="col-md-4 py-1">
-				<p class="float-left mr-3"><i class="fa fa-credit-card fa-2x fa-fw text-muted"></i></p>
-				<p>{{ $person->account }}</p>
-			</div>
-			@endif
-		</div>
-		@if (!empty($person->note))
-		<div class="card-block row">
-			<div class="col-md-12 py-1">
-				<hr>
-				<i class="fa fa-sticky-note mr-1 text-muted"></i>Notes: <br />
-				{{$person->note}}
-			</div>
-		</div>
-		@endif
-	</div>
-	<div class="card-footer card-block">
-		<div class="row align-items-center">
-			<div class="col-md-4">
-				<small><i class="fa fa-id-card fa-fw mr-1 text-muted"></i>ID#: {{ $person->id }}</small>
-			</div>
-			<div class="col-md-4">
-				<small><i class="fa fa-plus-square fa-fw text-muted"></i>Created: {{ $person->created_at }}</small>
-			</div>
-			<div class="col-md-4">
-				<small><i class="fa fa-pencil-square fa-fw text-muted"></i>Updated: {{ $person->updated_at }}</small>
-			</div>
+						<span class="fa-stack">
+							<i class="fa fa-circle-thin fa-stack-2x"></i>
+							<i class="fa fa-linkedin fa-stack-1x"></i>
+						</span>
+
+						<span class="fa-stack">
+							<i class="fa fa-circle-thin fa-stack-2x"></i>
+							<i class="fa fa-google fa-stack-1x"></i>
+						</span>
+					</p>
+					<p class="uk-width-1-2"><i class="fa fa-fw fa-2x fa-tags uk-align-left"></i><span class="label uk-article-meta">TAGS</span><br />{{ $person->tags }}</p>
+				</li>
+				<li class="uk-margin-remove-top" uk-grid>
+					<p class="uk-width-1-2"><i class="fa fa-fw fa-2x fa-credit-card uk-align-left"></i><span class="label uk-article-meta">ACCOUNT NUMBER</span><br />{{ $person->account }}</p>
+					<p class="uk-width-1-2"><i class="fa fa-fw fa-2x fa-user-circle uk-align-left"></i><span class="label uk-article-meta">ACCOUNT MANAGER</span><br />{{ $person->account }}</p>
+					<p class="uk-width-1-2"><i class="fa fa-fw fa-2x fa-eye uk-align-left"></i><span class="label uk-article-meta">STATUS</span><br />{{ $person->status }}</p>
+					<p class="uk-width-1-2"><i class="fa fa-fw fa-2x fa-cubes uk-align-left"></i><span class="label uk-article-meta">TYPE</span><br />{{ $person->real_type }}</p>
+					<p class="uk-width-1-2"><i class="fa fa-fw fa-2x fa-sitemap uk-align-left"></i><span class="label uk-article-meta">CATEGORY</span><br />{{ $person->category }}</p>
+					<p class="uk-width-1-2"><i class="fa fa-fw fa-2x fa-handshake-o uk-align-left"></i><span class="label uk-article-meta">REFERRER</span><br />{{ $person->refer }}</p>
+
+				</li>
+				<li class="uk-margin-remove-top" uk-grid>
+					<p class="uk-width-1-1"><i class="fa fa-fw fa-2x fa-sticky-note uk-align-left"></i><span class="label uk-article-meta">NOTES</span><br />{{ $person->note }}</p>
+				</li>
+			</ul>
 		</div>
 	</div>
+	<footer class="uk-card-footer">
+		<p><small><i class="fa fa-fw fa-id-card fa-fw uk-margin-small-right"></i>{{ $person->id }}
+			<i class="fa fa-fw fa-plus-square uk-margin-small-left uk-margin-small-right"></i>{{ $person->created_at }}
+			<i class="fa fa-fw fa-pencil-square uk-margin-small-left uk-margin-small-right"></i>{{ $person->updated_at }}</small>
+		</p>
+	</footer>
 </article>
-
-@if(!$person->places->isEmpty())
-<div class="related px-3 py-3">
-	<h2>Places</h2>
-	@foreach ($person->places as $key => $place)
-	<div class="card-list">
-		<div class="card my-3 p-1">
-			<div class="card-block row align-items-center">
-				<header class="col-md-6">
-					@if (empty($person->image))
-					<img class="float-left rounded-circle mr-3" width="80" height="80" src="http://lorempixel.com/80/80/city/{{ $place->id }}" alt="" />
-					@else
-					<img class="float-left rounded-circle mr-3" width="80" height="80" src="/media/places/{{ $place->image }}" alt="" />
-					@endif
-					<h2 class="h4 card-title pt-3"><a class="btn-text" href="{{ route('places.show', $place->id) }}">{{ $place->name }}</a></h2>
-					<h6 class="card-subtitle text-muted">
-						{{ $place->address }} {{ $place->address2 }}, {{ $place->city }} {{ $place->state }} {{ $place->zip }}
-					</h6>
-				</header>
-				<div class="col-md-3">
-					@if (!empty($place->phone))
-					<p><i class="text-muted fa fa-phone fa-2x fa-fw mr-1 float-left"></i>{{ $person->phone }}</p>
-					@endif
-				</div>
-				<div class="col-md-3">
-					@if (!empty($place->email))
-					<p><i class="text-muted fa fa-envelope fa-2x fa-fw mr-1 float-left"></i>{{ $person->email }}</p>
-					@endif
-				</div>
-			</div>
-		</div>
-	</div>
-	@endforeach
-</div>
-@endif
 @endsection
 
 @section('aside')
-<ul class="nav flex-column nav-pills">
-	<li class="nav-item"><a class="nav-link" href="MAILTO:{{ $person->email }}">Send an Email</a></li>
-	<li class="nav-item"><a class="nav-link" href="CALLTO:{{ $person->phone }}">Call Primary Phone</a></li>
-	<li class="nav-item"><a class="nav-link" href="CALLTO:{{ $person->alt }}">Call Secondary Phone</a></li>
-</ul>
-<ul class="nav flex-column nav-pills">
-	<li class="nav-item"><a class="nav-link" href="MAILTO:{{ $person->email }}">New Task...</a></li>
-	<li class="nav-item"><a class="nav-link" href="CALLTO:{{ $person->phone }}">New Money...</a></li>
-</ul>
+<div class="uk-card uk-card-body">
+	<ul class="uk-nav-default uk-nav-parent-icon" uk-nav>
+		<li class="uk-nav-header">Actions</li>
+		<li><a href="#"><i class="fa fa-fw fa-phone uk-margin-small-right"></i>Call Primary</a></li>
+		<li><a href="#"><i class="fa fa-fw fa-mobile uk-margin-small-right"></i>Call Secondary</a></li>
+		<li><a href="#"><i class="fa fa-fw fa-envelope uk-margin-small-right"></i>Send Email</a></li>
+		<li class="uk-parent">
+			<a href="#"><i class="fa fa-fw fa-plus uk-margin-small-right"></i>New...</a>
+			<ul class="uk-nav-sub">
+				<li><a href="#"><i class="fa fa-fw fa-tag uk-margin-small-right"></i>Task</a></li>
+				<li><a href="#"><i class="fa fa-fw fa-building uk-margin-small-right"></i>Place</a></li>
+				<li><a href="#"><i class="fa fa-fw fa-briefcase uk-margin-small-right"></i>Project</a></li>
+				<li><a href="#"><i class="fa fa-fw fa-page uk-margin-small-right"></i>Invoice</a></li>
+				<li><a href="#"><i class="fa fa-fw fa-calendar uk-margin-small-right"></i>Appointment</a></li>
+			</ul>
+		</li>
+		<li class="uk-nav-header">Related</li>
+		<li><a href="#"><i class="fa fa-fw fa-building uk-margin-small-right"></i></span> Places</a></li>
+		<li><a href="#"><i class="fa fa-fw fa-tag uk-margin-small-right"></i> Tasks</a></li>
+		<li><a href="#"><i class="fa fa-fw fa-briefcase uk-margin-small-right"></i> Projects</a></li>
+		<li class="uk-nav-divider"></li>
+		<li><a href="#"><i class="fa fa-fw fa-tag uk-margin-small-right"></i> Item</a></li>
+	</ul>
+</div>
 @endsection
 
 @section('title')
@@ -154,7 +117,7 @@ View
 
 @section('actions')
 <li class="nav-item"><a class="nav-link" href="{{ route('people.edit', $person->id) }}"><i class="fa fa-edit fa-fw"></i></a></li>
-<li class="nav-item"><a class="nav-link" data-toggle="modal" data-target="#modal"><i class="fa fa-trash fa-fw"></i></a></li>
+<li class="nav-item"><a class="nav-link" href="#modal" uk-toggle><i class="fa fa-trash fa-fw"></i></a></li>
 <li class="nav-item"><a class="nav-link" href="{{ route('people.create') }}"><i class="fa fa-plus fa-fw"></i></a></li>
 @endsection
 
@@ -163,17 +126,19 @@ mx-3 card-open
 @endsection
 
 @section('modal')
-<div class="modal-header">
-	<h5 class="modal-title" id="modal-label">Delete {{ $person->name }}?</h5>
-	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		<span aria-hidden="true">&times;</span>
-	</button>
-</div>
-<div class="modal-body">
-	<p>Are you sure you wish to delete? (There is no undo.)</p>
-</div>
-<div class="modal-footer">
-	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-	{!! Form::open(['method' => 'DELETE','route' => ['people.destroy', $person->id],'style'=>'display:inline']) !!}{!! Form::button('OK', ['class'=>'btn btn-primary', 'type'=>'submit']) !!}{!! Form::close() !!}
+<div id="modal" uk-modal>
+	<div class="uk-modal-dialog">
+		<button class="uk-modal-close-default" type="button" uk-close></button>
+		<div class="uk-modal-header">
+			<h2 class="uk-modal-title">Delete {{ $person->name }}?</h2>
+		</div>
+		<div class="uk-modal-body">
+			<p>Are you sure you wish to delete? (There is no undo.)</p>
+		</div>
+		<div class="uk-modal-footer uk-text-right">
+			{!! Form::open(['method' => 'DELETE','route' => ['people.destroy', $person->id],'style'=>'display:inline']) !!}{!! Form::button('OK', ['class'=>'uk-button uk-button-primary', 'type'=>'submit']) !!}{!! Form::close() !!}
+			<button class="uk-button uk-button-text uk-modal-close" type="button">Cancel</button>
+		</div>
+	</div>
 </div>
 @endsection
