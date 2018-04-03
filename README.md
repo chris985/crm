@@ -28,13 +28,13 @@ Build: 0.0.0.11 Updated the documentation structure and layout to look less inti
 
 ** The LAST 'stable' build is 0.0.0.8. ** We are rapidly approaching 0.0.1.0 -a major alpha release candidate! The 'master' branch will work towards this new release candidate which includes a major code revamp as we migrate to a new UI. 
 
-* See [CHANGELOG.md](docs/changelog.md) for the complete latest [Changelog](docs/changelog.md#changelog), [What's Next]((docs/changelog.md#next), [Roadmap](docs/changelog.md#roadmap) and [Past Changelog](docs/changelog.md#archive). If you are a developer, choose the master branch. If you are a user, be sure to select the stable branch. The developer (master) branch may be broken. If this is the case, the [What's New](#new) section will notate this.
+* See [CHANGELOG.md](docs/changelog.md) for the complete latest [Changelog](docs/changelog.md#changelog), [What's Next](docs/changelog.md#next), [Roadmap](docs/changelog.md#roadmap) and [Past Changelog](docs/changelog.md#archive). If you are a developer, choose the master branch. If you are a user, be sure to select the stable branch. The developer (master) branch may be broken. If this is the case, the [What's New](#new) section will notate this.
 
 ## Installation <a name="installation"></a>
-See [INSTALLATION.MD](docs/installation.md) for [System Requirements](docs/installation.md#system-requirements), [Installation](docs/installation.md#installation), [Update](docs/installation.md#updating), and [Uninstallation](docs/installation.md#uninstallation) instructions.
+See [INSTALLATION.MD](docs/installation.md) for [System Requirements](docs/installation.md#system-requirements), [Installation](docs/installation.md#installation), [Update](docs/installation.md#updating), and [Uninstallation](docs/installation.md#uninstallation) instructions as well as [User Contributions](docs/installation.md#contribute).
 
 ## Support <a name="support"></a>
-See [DOCUMENTATION.MD](docs/documentation.md) for important [Concepts](docs/installation.md#concepts), [Design Language](docs/installation.md#design-language), [Development Language](docs/installation.md#development-language), [Folder Structure](docs/installation.md#folders), [File Structure](docs/installation.md#files), and [Database Structure](docs/installation.md#database) and [FAQs](docs/installation.md#faqs).
+See [DOCUMENTATION.MD](docs/documentation.md) for important [Concepts](docs/installation.md#concepts), [Design Language](docs/installation.md#design-language), [Development Language](docs/installation.md#development-language), [Folder Structure](docs/installation.md#folders), [File Structure](docs/installation.md#files), [Database Structure](docs/installation.md#database), and [FAQs](docs/installation.md#faqs).
 
 ## License <a name="license"></a>
 &copy; Copyright 2017 [Christopher Martone](http://christophermartone.com). &copy; Copyright 2017 [Starcresc](http://starcresc.com). All Rights Reserved. Licensed Under [Creative Commons BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) [(Full License)](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode). See LICENSE.MD for full Credits and Licenses.

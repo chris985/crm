@@ -13,7 +13,7 @@ UP People Show
 UP Status boxes to allow choosing a result or setting the value directly
 UP Moved media storage location to storage directory via symlink. Will need testing and need to choose a better folder structure.
 
-* What's new? See the release notes (readme.md#new)here.
+* What's new? See the release notes [What's New](readme.md#new) section on the homepage.
 
 ### Known Issues <a name="issues"></a> <small>[Top](#contents)</small>
 Not all fields currently added to database thus filling entire form can cause issues. Typing in values for select fields is not working due to database type only accepting numbers.
