@@ -34,7 +34,7 @@ Build: 0.0.0.11 Updated the documentation structure and layout to look less inti
 See [INSTALLATION.MD](docs/installation.md) for [System Requirements](docs/installation.md#system-requirements), [Installation](docs/installation.md#installation), [Update](docs/installation.md#updating), and [Uninstallation](docs/installation.md#uninstallation) instructions as well as [User Contributions](docs/installation.md#contribute).
 
 ## Support <a name="support"></a>
-See [DOCUMENTATION.MD](docs/documentation.md) for important [Concepts](docs/installation.md#concepts), [Design Language](docs/installation.md#design-language), [Development Language](docs/installation.md#development-language), [Folder Structure](docs/installation.md#folders), [File Structure](docs/installation.md#files), [Database Structure](docs/installation.md#database), and [FAQs](docs/installation.md#faqs).
+See [DOCUMENTATION.MD](docs/documentation.md) for important [Concepts](docs/documentation.md#concepts), [Design Language](docs/documentation.md#design-language), [Development Language](docs/documentation.md#development-language), [Folder Structure](docs/documentation.md#folders), [File Structure](docs/documentation.md#files), [Database Structure](docs/documentation.md#database), and [FAQs](docs/documentation.md#faqs).
 
 ## License <a name="license"></a>
 &copy; Copyright 2017 [Christopher Martone](http://christophermartone.com). &copy; Copyright 2017 [Starcresc](http://starcresc.com). All Rights Reserved. Licensed Under [Creative Commons BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) [(Full License)](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode). See LICENSE.MD for full Credits and Licenses.
